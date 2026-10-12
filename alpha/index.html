@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <!-- <section>
+    <h1 style="color: green; font-size: 45px;">Spotify </h1>
+    <h3>URL:<a href="https://open.spotify.com">https://open.spotify.com</a> </h3> 
+    <p>This is Spotify’s public-facing web player where users browse playlists, albums, and recommendations.</p>
+    <h4>Add to Liked Songs (Plus/Check) Button</h4>
+    <p>The object is a playlist card on the Spotify Home page.
+        A user locates it by: </p>
+        <ul>
+            <li>Opening Spotify Web Player</li>
+            <li>Landing on the Home tab (default)</li>
+            <li>Scrolling through sections like Made For You, Your Top Mixes, Daily Recommendations, etc.</li>
+            <li>Each playlist appears as a rectangular card with:
+                <ul>
+                    <li>Cover art</li>
+                    <li>Playlist title</li>
+                    <li>Creator name</li>
+                    <li>The playlist card is visually grouped in horizontal rows, making it easy to scan.</li>
+                   
+                </ul>
+            </li>
+        </ul>
+
+        <h4>TRIGGERS</h4>
+    <p>The microinteraction begins when the user hovers their cursor over a playlist card. This hover event is the trigger.
+</p>
+         <h4>RULES (Existing Microinteraction)</h4>
+         <ol>
+            <li>Reveal play button- 
+When the cursor enters the playlist card area, Spotify checks if the card is hover‑active.
+If true, it displays a floating play button in the bottom-right corner of the card.</li>
+
+            <li>Card highlight-
+The playlist card background slightly brightens to show that the card is clickable.</li>
+         </ol>
+
+         <h4>FEEDBACK</h4>
+         <p>What the user sees when hovering:</p>
+         <ul>
+            <li>A green circular Play button fades in</li>
+            <li>The playlist card background increases brightness</li>
+            <li>The cursor changes to a pointer</li>
+            <li>The card feels “active” and ready to be clicked</li>
+            <li>There is no sound feedback because this is a web interaction.</li>
+
+         </ul>
+
+         <h4>LOOPS</h4>
+         <p>What the user sees when hovering:</p>
+         <ul>
+            <li>Every time the user hovers over a playlist card, the Play button appears.</li>
+            <li>When the cursor leaves, the Play button disappears.</li>
+            <li>the background brigthens</li>
+         </ul>
+
+
+         <h4>MODES</h4>
+         <p>What the user sees when hovering:</p>
+         <ul>
+            <li>Logged-in mode: Hovering shows the play button and allows playback.</li>
+            <li>Logged-out mode: Hovering still shows the visual hover effect, but clicking redirects the user to the login page instead of playing music.
+</li>
+            <li>Mobile mode: There is no hover interaction because mobile devices rely on tap events. The Play button is always visible or appears on tap.
+</li>
+         </ul>
+
+         <h4>IMAGES</h4>
+         <p>No hover</p>
+<img src="../spotifyhome.png" style="width:500px;" alt="">
+         <p>Hover on</p>
+<img src="../spotify_on_click.png" width="500px">
+</section> -->
+
+<section>
+    <h1 style="color: green; font-size: 45px;">Spotify</h1>
+<h3>URL: <a href="https://open.spotify.com">https://open.spotify.com</a></h3>
+
+<h4>Save Playlist to Your Library (Plus/Check) Button</h4>
+<p>Located on playlist headers/action bars (next to the main Play button) while viewing a playlist.</p>
+
+
+<h4>TRIGGERS</h4>
+<ul>
+    <li>Hover On</li>
+    <li>Hover Off</li>
+    <li>Click On</li>
+    <li>Click Off</li>
+</ul>
+
+<h4>RULES</h4>
+<h5>Hover On (Unsaved State)</h5>
+<ol>
+    <li>Cursor changes to a hand icon.</li>
+    <li>Text saying "Save to Your Library" appears near the button.</li>
+    <li>Plus icon changes from gray to white.</li>
+</ol>
+
+<h5>Hover Off (Unsaved State)</h5>
+<ol>
+    <li>Cursor changes back to a normal arrow.</li>
+    <li>Text disappears.</li>
+    <li>Plus icon turns back to gray.</li>
+</ol>
+
+<h5>Click On (Save to Library)</h5>
+<ol>
+    <li>Plus icon (+) turns into a green checkmark (✓).</li>
+    <li>A small burst of green and white stars pops out around the button.</li>
+    <li>Text changes to "Saved to Your Library".</li>
+    <li>The playlist is added to the user's library sidebar.</li>
+</ol>
+
+<h5>Hover On (Saved State)</h5>
+<ol>
+    <li>Cursor changes to a hand icon.</li>
+    <li>Text saying "Remove from Your Library" appears near the button.</li>
+    <li>Green checkmark icon stays green and brightens slightly.</li>
+</ol>
+
+<h5>Hover Off (Saved State)</h5>
+<ol>
+    <li>Cursor changes back to a normal arrow.</li>
+    <li>Text disappears.</li>
+    <li>Green checkmark icon stays green.</li>
+</ol>
+
+<h5>Click Off (Remove from Library)</h5>
+<ol>
+    <li>Green checkmark icon (✓) turns back into a gray plus icon (+).</li>
+    <li>Text changes to "Save to Your Library".</li>
+    <li>The playlist is removed from the user's library sidebar.</li>
+</ol>
+
+<h4>FEEDBACK</h4>
+<h5>Hover On</h5>
+<ol>
+    <li>Cursor becomes a hand pointer.</li>
+    <li>Small text box appears ("Save to Your Library" or "Remove from Your Library").</li>
+    <li>Icon lights up (gray to white or bright green).</li>
+</ol>
+
+<h5>Hover Off</h5>
+<ol>
+    <li>Cursor becomes a normal arrow.</li>
+    <li>Text box goes away.</li>
+    <li>Icon color goes back to normal.</li>
+</ol>
+
+<h5>Click On</h5>
+<ol>
+    <li>Icon changes from gray plus (+) to green checkmark (✓).</li>
+    <li>Checkmark pops and scales up briefly.</li>
+    <li>Green and white stars burst around the icon.</li>
+    <li>A message pops up at the bottom left: "Added to Your Library".</li>
+</ol>
+
+<h5>Click Off</h5>
+<ol>
+    <li>Icon changes from green checkmark (✓) back to gray plus (+).</li>
+    <li>A message pops up at the bottom left: "Removed from Your Library".</li>
+</ol>
+
+<h4>LOOPS/MODES</h4>
+<ul>
+    <li><strong>Binary Toggle Mode:</strong> Switches back and forth between Unsaved (Plus icon) and Saved (Green Checkmark icon).</li>
+</ul>
+
+<h4>VISUALIZATION</h4>
+<img src="../images/Screenshot 2026-10-12 144205.png"  width="320px"  alt="">
+<img src="../images/Screenshot 2026-10-12 152306.png"  width="320px"  alt="">
+<img src="../images/Screenshot 2026-10-12 152425.png" width="320px"   alt="">
+<img src="../images/remove.png" width="320px" alt="">
+<img src="../images/Screenshot 2026-10-12 152458.png" width="320px"   alt="">
+
+
+</section>
+</body>
+</html>
