@@ -6,356 +6,438 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
-    <title>Document</title>
+    <title>Spotify Microinteraction — Save to Library</title>
+    <style>
+        :root {
+            --spotify-green: #1ed760;
+            --page-bg: #121212;
+            --panel-bg: #181818;
+            --raised-bg: #282828;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border: #333333;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 28px 16px 48px;
+            background: var(--page-bg);
+            color: var(--text-secondary);
+            font-family: "Inter", sans-serif;
+            line-height: 1.65;
+        }
+
+        .section {
+            width: min(100%, 1000px);
+            margin: 0 auto;
+            padding: clamp(20px, 4vw, 42px);
+            background: var(--panel-bg);
+            border-radius: 12px;
+        }
+
+        .page-header { 
+            text-align: center; 
+        }
+
+        h1 {
+            margin: 0;
+            color: var(--spotify-green);
+            font-size: clamp(36px, 6vw, 48px);
+            font-weight: 700;
+            letter-spacing: -1.8px;
+        }
+
+        .subtitle {
+            margin: 4px 0 24px;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        a { color: var(--spotify-green); text-decoration: none; }
+        a:hover { color: white; text-decoration: underline; }
+
+        
+        .demo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto 32px;
+            padding: 26px 18px;
+            background: #202020;
+            border: 1px solid #303030;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .demo-label {
+            margin: 0;
+            color: white;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .button-wrap {
+            position: relative;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            margin: 8px 0 2px;
+        }
+
+        .save-button {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 64px;
+            height: 64px;
+            padding: 0;
+            border: 0;
+            border-radius: 50%;
+            background: var(--raised-bg);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: background-color 180ms ease, color 180ms ease,
+                        transform 180ms ease, box-shadow 180ms ease;
+        }
+
+        .save-button:hover {
+            color: white;
+            background: #383838;
+            transform: scale(1.05);
+        }
+
+        .save-button:focus-visible {
+            outline: 3px solid white;
+            outline-offset: 4px;
+        }
+
+        .save-button[aria-pressed="true"] { color: var(--spotify-green); }
+        .save-button[aria-pressed="true"]:hover {
+            color: #70f09b;
+            box-shadow: 0 0 0 3px rgba(30, 215, 96, 0.12);
+        }
+
+        .save-button svg {
+            width: 30px;
+            height: 30px;
+            stroke: currentColor;
+            stroke-width: 2.4;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            transition: transform 180ms ease;
+        }
+
+        .save-button.just-saved svg { animation: pop 300ms ease; }
+
+        .tooltip {
+            position: absolute;
+            z-index: 5;
+            left: 50%;
+            bottom: calc(100% + 12px);
+            width: max-content;
+            max-width: 230px;
+            padding: 7px 10px;
+            border-radius: 4px;
+            background: #f5f5f5;
+            color: #181818;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.3;
+            box-shadow: 0 4px 14px #0008;
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, 4px);
+            transition: opacity 150ms ease, transform 150ms ease, visibility 150ms;
+            pointer-events: none;
+        }
+
+        .button-wrap:hover .tooltip,
+        .button-wrap:focus-within .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+        }
+
+        .status {
+            min-height: 25px;
+            margin: 0;
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .status.saved { color: var(--spotify-green); }
+
+        .hint {
+            margin: 0;
+            color: #888;
+            font-size: 12px;
+        }
+
+        /* Decorative stars shown briefly when saving */
+        .star-burst {
+            position: absolute;
+            inset: -12px;
+            pointer-events: none;
+        }
+
+        .star {
+            position: absolute;
+            color: var(--spotify-green);
+            font-size: 16px;
+            opacity: 0;
+            transform: scale(.2);
+        }
+
+        .star:nth-child(1) { top: 0; left: 8px; }
+        .star:nth-child(2) { top: 10px; right: -2px; color: white; font-size: 12px; }
+        .star:nth-child(3) { bottom: 2px; left: 0; color: white; font-size: 12px; }
+        .star:nth-child(4) { bottom: 0; right: 8px; }
+
+        .star-burst.play .star { animation: star-pop 650ms ease-out forwards; }
+        .star-burst.play .star:nth-child(2) { animation-delay: 45ms; }
+        .star-burst.play .star:nth-child(3) { animation-delay: 80ms; }
+        .star-burst.play .star:nth-child(4) { animation-delay: 25ms; }
+
+        @keyframes pop {
+            0% { transform: scale(1); }
+            45% { transform: scale(1.28); }
+            100% { transform: scale(1); }
+        }
+
+        @keyframes star-pop {
+            0% { opacity: 0; transform: scale(.2) translateY(4px); }
+            35% { opacity: 1; transform: scale(1.15) translateY(-3px); }
+            100% { opacity: 0; transform: scale(.65) translateY(-12px); }
+        }
+
+        /* Documentation content */
+        h2 {
+            margin: 30px 0 10px;
+            color: white;
+            font-size: 24px;
+            line-height: 1.3;
+        }
+
+        h3 {
+            margin: 25px 0 8px;
+            color: var(--spotify-green);
+            font-size: 17px;
+        }
+
+        .section-label {
+            margin-top: 28px;
+            padding: 10px 14px;
+            border-left: 4px solid var(--spotify-green);
+            border-radius: 4px;
+            background: var(--raised-bg);
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1.4px;
+        }
+
+        p { margin: 8px 0 14px; }
+        ul { margin: 8px 0 18px; padding-left: 24px; }
+        li { padding: 3px 0; }
+        li::marker { color: var(--spotify-green); }
+        strong { color: white; }
+
+        .toast {
+            position: fixed;
+            left: 24px;
+            bottom: 24px;
+            z-index: 10;
+            max-width: calc(100vw - 32px);
+            padding: 13px 18px;
+            border-radius: 6px;
+            background: #f5f5f5;
+            color: #181818;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 8px 30px #0008;
+            opacity: 0;
+            transform: translateY(12px);
+            pointer-events: none;
+            transition: opacity 180ms ease, transform 180ms ease;
+        }
+
+        .toast.show { opacity: 1; transform: translateY(0); }
+
+        hr { margin: 30px 0; border: 0; border-top: 1px solid var(--border); }
+
+        @media (max-width: 600px) {
+            body { padding: 12px 10px 30px; }
+            .section { padding: 20px 16px; }
+            .demo { padding: 22px 12px; }
+            h2 { font-size: 21px; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
 </head>
 <body>
-<section class="section">
-    <div style="display: flex; align-items: center; justify-content: space-between; gap: 10px;" >
-        <h1>Spotify</h1>
-        <img id="spotify-logo" src="../images/spotifylogo.png" >
-    </div>
-<h2>URL: <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">https://open.spotify.com</a></h2>
+    <main class="section">
+        <header class="page-header">
+            <h1>Spotify</h1>
+            <p class="subtitle">
+                Microinteraction prototype ·
+                <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">Open Spotify</a>
+            </p>
+        </header>
 
-<h3>Save Playlist to Your Library (Plus/Check) Button</h3>
-<p>Located on playlist headers/action bars (next to the main Play button) while viewing a playlist. It is a plus sign with a circle around it</p>
+        <!-- Functional Alpha microinteraction object -->
+        <section class="demo" aria-labelledby="demo-title">
+            <p class="demo-label" id="demo-title">Save Playlist to Your Library</p>
 
+            <div class="button-wrap">
+                <button
+                    class="save-button"
+                    id="saveButton"
+                    type="button"
+                    aria-label="Save to Your Library"
+                    aria-pressed="false"
+                    aria-describedby="buttonHint"
+                >
+                    <svg id="buttonIcon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 5v14M5 12h14"></path>
+                    </svg>
+                </button>
 
-<h4>TRIGGERS</h4>
-<ul>
-    <li>Hover On</li>
-    <li>Hover Off</li>
-    <li>Click On</li>
-    <li>Click Off</li>
-</ul>
+                <span class="tooltip" id="tooltip" role="tooltip">Save to Your Library</span>
 
-<h4>RULES</h4>
-<h5>Hover On (Unsaved State)</h5>
-<ul>
-    <li>Cursor changes to a hand icon.</li>
-    <li>Text saying "Save to Your Library" appears near the button.</li>
-    <li>Plus icon changes from gray to white.</li>
-</ul>
+                <span class="star-burst" id="starBurst" aria-hidden="true">
+                    <span class="star">✦</span>
+                    <span class="star">✧</span>
+                    <span class="star">✦</span>
+                    <span class="star">✧</span>
+                </span>
+            </div>
 
-<h5>Hover Off (Unsaved State)</h5>
-<ul>
-    <li>Cursor changes back to a normal arrow.</li>
-    <li>Text disappears.</li>
-    <li>Plus icon turns back to gray.</li>
-</ul>
+            <p class="status" id="status" aria-live="polite">Not saved to your library</p>
+            <p class="hint" id="buttonHint">Hover to preview · Click to save or remove</p>
+        </section>
 
-<h5>Click On (Save to Library)</h5>
-<ul>
-    <li>Plus icon (+) turns into a green checkmark (✓).</li>
-    <li>A small burst of green and white stars pops out around the button.</li>
-    <li>Text changes to "Saved to Your Library".</li>
-    <li>The playlist is added to the user's library sidebar.</li>
-</ul>
+        <h2>Save Playlist to Your Library (+/✓) Button</h2>
+        <p>
+            This Spotify-inspired microinteraction is represented by a plus button.
+            Clicking it switches the button to a green checkmark to indicate the
+            saved state. Clicking again returns it to the unsaved state.
+        </p>
 
-<h5>Hover On (Saved State)</h5>
-<ul>
-    <li>Cursor changes to a hand icon.</li>
-    <li>Text saying "Remove from Your Library" appears near the button.</li>
-    <li>Green checkmark icon stays green and brightens slightly.</li>
-</ul>
+        <div class="section-label">TRIGGERS</div>
+        <ul>
+            <li>Hover On</li>
+            <li>Hover Off</li>
+            <li>Click On</li>
+            <li>Click Off</li>
+        </ul>
 
-<h5>Hover Off (Saved State)</h5>
-<ul>
-    <li>Cursor changes back to a normal arrow.</li>
-    <li>Text disappears.</li>
-    <li>Green checkmark icon stays green.</li>
-</ul>
+        <div class="section-label">RULES</div>
+        <ul>
+            <li><strong>Hover On:</strong> The user moves the cursor over the button, causing its icon to brighten and a tooltip to appear.</li>
+            <li><strong>Hover Off:</strong> The cursor leaves the button, causing the tooltip to disappear and the icon to return to its normal appearance.</li>
+            <li><strong>Click On:</strong> The user clicks the plus button to switch to the saved state. Clicking the plus changes it to a green checkmark. and stars fade in</li>
+            <li><strong>Click Off:</strong> The user clicks the checkmark button to switch back to the unsaved state.</li>
+        </ul>
 
-<h5>Click Off (Remove from Library)</h5>
-<ul>
-    <li>Green checkmark icon (✓) turns back into a gray plus icon (+).</li>
-    <li>Text changes to "Save to Your Library".</li>
-    <li>The playlist is removed from the user's library sidebar.</li>
-</ul>
+        <div class="section-label">FEEDBACK</div>
+        <ul>
+            <li><strong>Hover On:</strong> The user moves the cursor over the button, causing its icon to brighten and a tooltip to appear.</li>
+            <li><strong>Hover Off:</strong> The cursor leaves the button, causing the tooltip to disappear and the icon to return to its normal appearance.</li>
+            <li><strong>Click On:</strong> The user clicks the plus button to switch to the saved state. Clicking the plus changes it to a green checkmark. and stars fade in</li>
+            <li><strong>Click Off:</strong> The checkmark changes to a plus sign</li>
+        </ul>
 
-<h4>FEEDBACK</h4>
-<h5>Hover On</h5>
-<ul>
-    <li>Cursor becomes a hand pointer.</li>
-    <li>Small text box appears ("Save to Your Library" or "Remove from Your Library").</li>
-    <li>Icon lights up (gray to white or bright green).</li>
-</ul>
+        <div class="section-label">LOOPS &amp; MODES</div>
+        <ul>
+            <li>No loops</li>
+        </ul>
 
-<h5>Hover Off</h5>
-<ul>
-    <li>Cursor becomes a normal arrow.</li>
-    <li>Text box goes away.</li>
-    <li>Icon color goes back to normal.</li>
-</ul>
-
-<h5>Click On</h5>
-<ul>
-    <li>Icon changes from gray plus (+) to green checkmark (✓).</li>
-    <li>Checkmark pops and scales up briefly.</li>
-    <li>Green and white stars burst around the icon.</li>
-    <li>A message pops up at the bottom left: "Added to Your Library".</li>
-</ul>
-
-<h5>Click Off</h5>
-<ul>
-    <li>Icon changes from green checkmark (✓) back to gray plus (+).</li>
-    <li>A message pops up at the bottom left: "Removed from Your Library".</li>
-</ul>
-
-<h4>LOOPS/MODES</h4>
-<ul>
-    <li><strong>Binary Toggle Mode:</strong> Switches back and forth between Unsaved (Plus icon) and Saved (Green Checkmark icon).</li>
-</ul>
-
-<h4>VISUALIZATION</h4>
-
-<h3>Hover on and clicked state that shows little stars</h3>
-<img src="../images/2.png"  width="520px"  alt="">
-
-<hr>
-<img src="../images/3" width="520px"   alt="">
-
-<hr>
-<h3>After hovering over checkmark, tooltip to remove from library</h3>
-<img src="../images/4.png" width="520px" alt="">
-
-<hr>
-<h3>White text after removed from library</h3>
-<img src="../images/Screenshot 2026-10-12 152458.png" width="520px"   alt="">
-
-
-
-<style>
-    .section{
-        align-items: center;
-        display: flex;
-        flex-direction: column;
-        justify-content:center;
-        text-align: center;
-        font-family: "Inter", sans-serif;
-
-
-    }
-    h4{
-        background-color: green;
-        color: whitesmoke;
-        padding: 10px;
-    }
-    h5{
-        text-decoration: underline;
-        text-align: left;
-        font-weight: 700;
-        width: fit-content;
-        color: green;
+        <hr>
         
-    }
-    li{
-        text-align: left;
-    }
-    h3{
-        font-weight: 700;
-        color: rgb(0, 60, 0);
-    }
-</style>
+    </main>
 
-</section>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<style>
-    * {
-    box-sizing: border-box;
-}
+    <script>
+        const saveButton = document.getElementById('saveButton');
+        const buttonIcon = document.getElementById('buttonIcon');
+        const tooltip = document.getElementById('tooltip');
+        const status = document.getElementById('status');
+        const toast = document.getElementById('toast');
+        const starBurst = document.getElementById('starBurst');
 
-body {
-    margin: 0;
-    padding: 30px 16px;
-    background-color: #121212;
-    color: #b3b3b3;
-    font-family: "Inter", sans-serif;
-    line-height: 1.7;
-}
+        let isSaved = false;
+        let toastTimer;
 
-/* Main content container */
-.section {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    text-align: left;
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
 
-    max-width: 1000px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 40px;
+            window.clearTimeout(toastTimer);
+            toastTimer = window.setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2400);
+        }
 
-    background-color: #181818;
-    border-radius: 12px;
-}
+        function replayStarBurst() {
+            starBurst.classList.remove('play');
+            // Restart the CSS animation on each save.
+            void starBurst.offsetWidth;
+            starBurst.classList.add('play');
+        }
 
-/* Main Spotify heading */
-h1 {
-    color: #1ed760;
-    font-size: 48px;
-    font-weight: 700;
-    letter-spacing: -2px;
-    margin: 0 0 10px;
-}
-#spotify-logo{
-    max-width: 30px;
-}
-/* Website URL */
-h2 {
-    font-size: 16px;
-    font-weight: 400;
-    color: #b3b3b3;
-    margin: 0 0 35px;
-}
+        function renderState() {
+            saveButton.setAttribute('aria-pressed', String(isSaved));
 
-a {
-    color: #1ed760;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
+            if (isSaved) {
+                buttonIcon.innerHTML = '<path d="m5 12 4 4L19 6"></path>';
+                saveButton.setAttribute('aria-label', 'Remove from Your Library');
+                tooltip.textContent = 'Remove from Your Library';
+                status.textContent = 'Saved to Your Library';
+                status.classList.add('saved');
+            } else {
+                buttonIcon.innerHTML = '<path d="M12 5v14M5 12h14"></path>';
+                saveButton.setAttribute('aria-label', 'Save to Your Library');
+                tooltip.textContent = 'Save to Your Library';
+                status.textContent = 'Not saved to your library';
+                status.classList.remove('saved');
+            }
+        }
 
-a:hover {
-    color: #ffffff;
-    text-decoration: underline;
-}
+        saveButton.addEventListener('click', () => {
+            isSaved = !isSaved;
+            renderState();
 
-/* Feature title */
-h3 {
-    width: 100%;
-    color: #ffffff;
-    font-size: 25px;
-    font-weight: 800;
-    letter-spacing: -0.5px;
-    margin: 30px 0 12px;
-}
+            if (isSaved) {
+                saveButton.classList.remove('just-saved');
+                void saveButton.offsetWidth;
+                saveButton.classList.add('just-saved');
+                replayStarBurst();
+                showToast('Added to Your Library');
+            } else {
+                starBurst.classList.remove('play');
+                showToast('Removed from Your Library');
+            }
+        });
 
-/* Section headings */
-h4 {
-    width: 100%;
-    color: #ffffff;
-    background-color: #282828;
+        // Keep hover/focus tooltip text synchronized with the current state.
+        saveButton.addEventListener('mouseenter', renderState);
+        saveButton.addEventListener('focus', renderState);
 
-    font-size: 14px;
-    font-weight: 800;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-
-    padding: 12px 16px;
-    margin: 30px 0 15px;
-    border-left: 4px solid #1ed760;
-    border-radius: 4px;
-}
-
-/* Subheadings */
-h5 {
-    width: 100%;
-    color: #1ed760;
-    font-size: 17px;
-    font-weight: 700;
-    text-decoration: none;
-
-    margin: 22px 0 8px;
-}
-
-/* Paragraphs */
-p {
-    width: 100%;
-    color: #b3b3b3;
-    font-size: 16px;
-    margin: 0 0 18px;
-}
-
-/* Lists */
-ul {
-    width: 100%;
-    margin: 0 0 18px;
-    padding-left: 25px;
-}
-
-li {
-    color: #d9d9d9;
-    font-size: 15px;
-    padding: 4px 0;
-}
-
-li::marker {
-    color: #1ed760;
-}
-
-/* Bold text */
-strong {
-    color: #ffffff;
-}
-
-/* Horizontal dividers */
-hr {
-    width: 100%;
-    border: none;
-    border-top: 1px solid #333333;
-    margin: 35px 0;
-}
-
-/* Screenshots */
-img {
-    display: block;
-    width: 100%;
-    max-width: 520px;
-    height: auto;
-    margin: 15px auto 25px;
-
-    border: 1px solid #333333;
-    border-radius: 8px;
-    background-color: #222222;
-
-    transition: transform 0.25s ease,
-                border-color 0.25s ease;
-}
-
-img:hover {
-    transform: scale(1.02);
-    border-color: #1ed760;
-}
-
-/* Responsive layout for phones and tablets */
-@media (max-width: 600px) {
-    body {
-        padding: 12px;
-    }
-
-    .section {
-        padding: 20px 16px;
-    }
-
-    h1 {
-        font-size: 38px;
-    }
-
-    h2 {
-        font-size: 14px;
-        overflow-wrap: anywhere;
-    }
-
-    h3 {
-        font-size: 21px;
-    }
-
-    h4 {
-        font-size: 12px;
-    }
-
-    h5 {
-        font-size: 16px;
-    }
-
-    p,
-    li {
-        font-size: 14px;
-    }
-
-    img {
-        max-width: 100%;
-    }
-}
-</style>
+        renderState();
+    </script>
 </body>
 </html>
