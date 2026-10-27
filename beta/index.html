@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Spotify Microinteraction — Save to Library</title>
+    <style>
+        :root {
+            --spotify-green: #1ed760;
+            --page-bg: #121212;
+            --panel-bg: #181818;
+            --raised-bg: #282828;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border: #333333;
+        }
+
+        
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 24px 16px;
+    background: #121212;
+    color: #b3b3b3;
+    font-family: 'Inter', Arial, sans-serif;
+    line-height: 1.65;
+}
+
+.section {
+    max-width: 950px;
+    margin: auto;
+    padding: clamp(20px, 4vw, 40px);
+    background: #181818;
+    border-radius: 12px;
+}
+
+.page-header {
+    text-align: center;
+}
+
+h1 {
+    color: #1ed760;
+    font-size: clamp(36px, 6vw, 48px);
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    margin: 0;
+}
+
+.subtitle {
+    margin: 4px 0 10px;
+}
+
+a {
+    color: #1ed760;
+    text-decoration: none;
+}
+
+a:hover {
+    color: white;
+    text-decoration: underline;
+}
+
+h2 {
+    color: white;
+    font-size: 22px;
+    margin: 0 0 8px;
+}
+
+h3 {
+    color: white;
+    font-size: 16px;
+}
+
+p {
+    margin: 8px 0 14px;
+}
+
+.demo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin: 28px auto;
+    padding: 24px;
+    text-align: center;
+    background: #202020;
+    border: 1px solid #303030;
+    border-radius: 12px;
+}
+
+.hint {
+    color: #a7a7a7;
+    font-size: 13px;
+}
+
+.button-row {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+}
+
+.button-wrap {
+    position: relative;
+    display: inline-flex;
+}
+
+.icon-button {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 54px;
+    height: 54px;
+    border: 0;
+    border-radius: 50%;
+    background: #333;
+    color: #b3b3b3;
+    cursor: pointer;
+    transition: color .18s ease, background .18s ease, transform .18s ease;
+}
+
+.icon-button:hover,
+.icon-button:focus-visible {
+    color: white;
+    background: #444;
+    transform: scale(1.05);
+}
+
+.icon-button.active {
+    color: #1ed760;
+}
+
+.icon-button svg,
+.queue-toggle svg {
+    width: 25px;
+    height: 25px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.tooltip {
+    position: absolute;
+    z-index: 5;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    width: max-content;
+    max-width: 230px;
+    padding: 7px 10px;
+    border-radius: 4px;
+    background: #f5f5f5;
+    color: #181818;
+    font-size: 12px;
+    font-weight: 700;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 4px);
+    transition: opacity .15s ease, transform .15s ease;
+    pointer-events: none;
+}
+
+.button-wrap:hover .tooltip,
+.button-wrap:focus-within .tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+}
+
+.status {
+    min-height: 24px;
+    margin: 0;
+    color: #b3b3b3;
+    font-size: 14px;
+}
+
+.status.saved {
+    color: #1ed760;
+}
+
+.primary-button,
+.secondary-button {
+    border: 0;
+    border-radius: 24px;
+    padding: 10px 18px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s ease, background .15s ease;
+}
+
+.primary-button {
+    color: #000;
+    background: #1ed760;
+}
+
+.primary-button:hover {
+    background: #3be477;
+    transform: scale(1.03);
+}
+
+.secondary-button {
+    color: white;
+    background: #333;
+}
+
+.secondary-button:hover {
+    background: #444;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+.preview-panel,
+.queue-panel {
+    width: min(100%, 440px);
+    padding: 16px;
+    border: 1px solid #383838;
+    border-radius: 8px;
+    background: #282828;
+    text-align: left;
+}
+
+.preview-panel ol,
+.queue-panel ol {
+    padding-left: 24px;
+}
+
+.preview-panel li,
+.queue-panel li {
+    padding: 5px 0;
+}
+
+.section-label {
+    margin-top: 24px;
+    padding: 10px 14px;
+    border-left: 4px solid #1ed760;
+    border-radius: 4px;
+    background: #282828;
+    color: white;
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 1.3px;
+}
+
+ul {
+    padding-left: 24px;
+}
+
+li {
+    padding: 3px 0;
+}
+
+li::marker {
+    color: #1ed760;
+}
+
+strong {
+    color: white;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #333;
+    margin: 32px 0;
+}
+
+.queue-list {
+    width: min(100%, 520px);
+}
+
+.queue-song {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 4px;
+    border-bottom: 1px solid #333;
+    text-align: left;
+}
+
+.song-number {
+    color: #888;
+    font-size: 13px;
+}
+
+.song-info {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.song-info strong {
+    font-size: 14px;
+}
+
+.song-info span {
+    color: #a7a7a7;
+    font-size: 12px;
+}
+
+.queue-button {
+    border: 1px solid #777;
+    border-radius: 20px;
+    padding: 6px 12px;
+    background: transparent;
+    color: white;
+    font: inherit;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.queue-button:hover {
+    border-color: #1ed760;
+    color: #1ed760;
+}
+
+.queue-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 0;
+    border-radius: 6px;
+    background: #333;
+    color: white;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.queue-toggle:hover {
+    background: #444;
+}
+
+.queue-counter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 22px;
+    height: 22px;
+    padding: 0 5px;
+    border-radius: 11px;
+    background: #1ed760;
+    color: #000;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.toast {
+    position: fixed;
+    z-index: 20;
+    bottom: 24px;
+    left: 24px;
+    max-width: calc(100vw - 48px);
+    padding: 12px 16px;
+    border-radius: 6px;
+    background: #f5f5f5;
+    color: #181818;
+    font-size: 14px;
+    font-weight: 700;
+    box-shadow: 0 8px 30px #0008;
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity .18s ease, transform .18s ease;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    .section {
+        padding: 18px 14px;
+    }
+
+    .demo {
+        padding: 18px 12px;
+    }
+
+    .queue-song {
+        gap: 8px;
+    }
+
+    .queue-button {
+        padding: 6px 8px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
+
+    </style>
+</head>
+<body>
+    
+<main class="section">
+    <header class="page-header">
+        <h1>Spotify</h1>
+        <p class="subtitle">
+            Beta Microinteraction Prototypes ·
+            <a href="https://open.spotify.com" target="_blank" rel="noopener noreferrer">
+                Open Spotify
+            </a>
+        </p>
+        <p>Proposed design improvements for Spotify's Web Player.</p>
+    </header>
+
+    <!-- MICROINTERACTION 1: SAVE WITH UNDO -->
+    <section class="demo" aria-labelledby="save-title">
+        <h2 id="save-title">1. Save Playlist to Your Library</h2>
+        <p class="hint">Save a playlist and undo the action within five seconds.</p>
+
+        <div class="button-wrap">
+            <button class="icon-button save-button"
+                    id="saveButton"
+                    type="button"
+                    aria-label="Save to Your Library"
+                    aria-pressed="false">
+                <svg id="saveIcon" viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M12 5v14M5 12h14"/>
+                </svg>
+            </button>
+            <span class="tooltip" id="saveTooltip">Save to Your Library</span>
+        </div>
+
+        <p class="status" id="saveStatus" aria-live="polite">
+            Not saved to your library
+        </p>
+
+        <button class="secondary-button" id="undoButton" hidden>
+            Undo
+        </button>
+    </section>
+
+    <div class="section-label">TRIGGERS</div>
+    <ul>
+        <li>Hover over or focus on the Save button.</li>
+        <li>Click the plus button to save the playlist.</li>
+        <li>Click Undo within five seconds of saving.</li>
+        <li>Click the checkmark to remove the playlist.</li>
+    </ul>
+
+    <div class="section-label">RULES</div>
+    <ul>
+        <li>Hovering displays a tooltip describing the available action.</li>
+        <li>Clicking the plus changes it to a green checkmark and displays an Undo option for five seconds.</li>
+        <li>Clicking Undo returns the button to its unsaved state.</li>
+    </ul>
+
+    <div class="section-label">FEEDBACK</div>
+    <ul>
+        <li>The plus changes to a green checkmark when saved.</li>
+        <li>The message "Added to Your Library" and an Undo button appear.</li>
+        <li>Clicking Undo changes the icon back to a plus and displays "Removed from Your Library."</li>
+    </ul>
+
+    <div class="section-label">LOOPS &amp; MODES</div>
+    <ul>
+        <li><strong>Unsaved mode:</strong> A plus icon is displayed.</li>
+        <li><strong>Saved mode:</strong> A green checkmark is displayed.</li>
+        <li><strong>Temporary mode:</strong> The Undo option is available for five seconds after saving.</li>
+    </ul>
+
+    <hr>
+
+    <!-- MICROINTERACTION 2: SMART SHUFFLE PREVIEW -->
+    <section class="demo" aria-labelledby="shuffle-title">
+        <h2 id="shuffle-title">2. Smart Shuffle Preview</h2>
+        <p class="hint">Preview three suggested songs before enabling Shuffle.</p>
+
+        <div class="button-row">
+            <div class="button-wrap">
+                <button class="icon-button" id="shuffleButton"
+                        type="button" aria-label="Preview Smart Shuffle"
+                        aria-pressed="false">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="m18 14 4 4-4 4"/>
+                        <path d="M2 18h2.5a5 5 0 0 0 4-2l7-8a5 5 0 0 1 4-2H22"/>
+                        <path d="m18 2 4 4-4 4"/>
+                        <path d="M2 6h2.5a5 5 0 0 1 4 2"/>
+                        <path d="M14 14l1.5 2a5 5 0 0 0 4 2H22"/>
+                    </svg>
+                </button>
+                <span class="tooltip">Preview Smart Shuffle</span>
+            </div>
+        </div>
+
+        <div class="preview-panel" id="shufflePreview" hidden>
+            <h3>Suggested next songs</h3>
+            <ol>
+                <li>Calm Down — Rema</li>
+                <li>Water — Tyla</li>
+                <li>WHERE SHE GOES — Bad Bunny</li>
+            </ol>
+            <button class="primary-button" id="enableShuffle">
+                Enable Shuffle
+            </button>
+        </div>
+
+        <p class="status" id="shuffleStatus" aria-live="polite">
+            Shuffle is off
+        </p>
+    </section>
+
+    <div class="section-label">TRIGGERS</div>
+    <ul>
+        <li>Hover over or focus on the Shuffle button.</li>
+        <li>Click the Shuffle button to open the preview.</li>
+        <li>Click Enable Shuffle to activate Shuffle.</li>
+        <li>Click the active Shuffle button to turn it off.</li>
+    </ul>
+
+    <div class="section-label">RULES</div>
+    <ul>
+        <li>Clicking Shuffle while it is off opens a panel with three proposed song recommendations.</li>
+        <li>Clicking Enable Shuffle closes the preview and turns Shuffle on.</li>
+        <li>Clicking Shuffle while it is on turns it off.</li>
+    </ul>
+
+    <div class="section-label">FEEDBACK</div>
+    <ul>
+        <li>The preview panel displays three suggested songs.</li>
+        <li>The Shuffle icon turns green when activated.</li>
+        <li>The status text changes between "Shuffle is off" and "Shuffle is on."</li>
+    </ul>
+
+    <div class="section-label">LOOPS &amp; MODES</div>
+    <ul>
+        <li><strong>Off mode:</strong> Shuffle is inactive.</li>
+        <li><strong>Preview mode:</strong> Suggested songs are displayed before activation.</li>
+        <li><strong>On mode:</strong> Shuffle is active until the user turns it off.</li>
+    </ul>
+
+    <hr>
+
+    <!-- MICROINTERACTION 3: ADD TO QUEUE -->
+    <section class="demo" aria-labelledby="queue-title">
+        <h2 id="queue-title">3. Add to Queue with Counter</h2>
+        <p class="hint">Add sample songs and see the queue counter update.</p>
+
+        <div class="queue-list">
+            <div class="queue-song">
+                <span class="song-number">01</span>
+                <div class="song-info">
+                    <strong>Calm Down</strong>
+                    <span>Rema</span>
+                </div>
+                <button class="queue-button" data-song="Calm Down"
+                        type="button" aria-label="Add Calm Down to queue">
+                    + Queue
+                </button>
+            </div>
+
+            <div class="queue-song">
+                <span class="song-number">02</span>
+                <div class="song-info">
+                    <strong>Water</strong>
+                    <span>Tyla</span>
+                </div>
+                <button class="queue-button" data-song="Water"
+                        type="button" aria-label="Add Water to queue">
+                    + Queue
+                </button>
+            </div>
+
+            <div class="queue-song">
+                <span class="song-number">03</span>
+                <div class="song-info">
+                    <strong>WHERE SHE GOES</strong>
+                    <span>Bad Bunny</span>
+                </div>
+                <button class="queue-button" data-song="WHERE SHE GOES"
+                        type="button" aria-label="Add WHERE SHE GOES to queue">
+                    + Queue
+                </button>
+            </div>
+        </div>
+
+        <button class="queue-toggle" id="openQueue" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 6h16M4 12h16M4 18h10"/>
+            </svg>
+            View Queue
+            <span class="queue-counter" id="queueCounter" hidden>0</span>
+        </button>
+
+        <p class="status" id="queueStatus" aria-live="polite">
+            Your queue is empty
+        </p>
+
+        <div class="queue-panel" id="queuePanel" hidden>
+            <h3>Up Next</h3>
+            <ol id="queueItems"></ol>
+            <button class="secondary-button" id="closeQueue" type="button">
+                Close Queue
+            </button>
+        </div>
+    </section>
+
+    <div class="section-label">TRIGGERS</div>
+    <ul>
+        <li>Hover over an Add to Queue button.</li>
+        <li>Click + Queue beside a song.</li>
+        <li>Click View Queue to display queued songs.</li>
+        <li>Click Close Queue to hide the queue panel.</li>
+    </ul>
+
+    <div class="section-label">RULES</div>
+    <ul>
+        <li>Clicking + Queue adds the selected sample song to the queue.</li>
+        <li>The counter increases by one for every song added.</li>
+        <li>Opening the queue displays the queued songs. Closing it hides the panel without removing songs.</li>
+    </ul>
+
+    <div class="section-label">FEEDBACK</div>
+    <ul>
+        <li>A confirmation message displays the song title and says it was added to the queue.</li>
+        <li>The numbered counter updates to reflect the total queued songs.</li>
+        <li>Clicking View Queue reveals the song list. Clicking Close Queue hides it.</li>
+    </ul>
+
+    <div class="section-label">LOOPS &amp; MODES</div>
+    <ul>
+        <li><strong>Empty mode:</strong> No songs have been added.</li>
+        <li><strong>Queue mode:</strong> The counter displays the number of queued songs.</li>
+        <li><strong>Queue panel mode:</strong> The list is visible until the user closes it.</li>
+        <li>Adding more songs repeats the add-to-queue interaction and updates the counter.</li>
+    </ul>
+
+    <hr>
+    <h2>Visualizations</h2>
+    <p>
+        Add your own screenshots below showing the cursor over each control,
+        the click state, and the resulting feedback. These should document
+        your proposed designs, not placeholder images.
+    </p>
+</main>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script>
+       
+const saveButton = document.getElementById('saveButton');
+const saveIcon = document.getElementById('saveIcon');
+const saveTooltip = document.getElementById('saveTooltip');
+const saveStatus = document.getElementById('saveStatus');
+const undoButton = document.getElementById('undoButton');
+
+const shuffleButton = document.getElementById('shuffleButton');
+const shufflePreview = document.getElementById('shufflePreview');
+const enableShuffle = document.getElementById('enableShuffle');
+const shuffleStatus = document.getElementById('shuffleStatus');
+
+const queueCounter = document.getElementById('queueCounter');
+const queueStatus = document.getElementById('queueStatus');
+const queuePanel = document.getElementById('queuePanel');
+const queueItems = document.getElementById('queueItems');
+const openQueue = document.getElementById('openQueue');
+const closeQueue = document.getElementById('closeQueue');
+const toast = document.getElementById('toast');
+
+let isSaved = false;
+let shuffleIsOn = false;
+let queuedSongs = [];
+let undoTimer;
+let toastTimer;
+
+function showToast(message) {
+    toast.textContent = message;
+    toast.classList.add('show');
+
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2400);
+}
+
+// 1. SAVE WITH UNDO
+function renderSaveState() {
+    saveButton.setAttribute('aria-pressed', String(isSaved));
+
+    if (isSaved) {
+        saveIcon.innerHTML = '<path d="m5 12 4 4L19 6"></path>';
+        saveButton.setAttribute('aria-label', 'Remove from Your Library');
+        saveTooltip.textContent = 'Remove from Your Library';
+        saveStatus.textContent = 'Saved to Your Library';
+        saveStatus.classList.add('saved');
+    } else {
+        saveIcon.innerHTML = '<path d="M12 5v14M5 12h14"></path>';
+        saveButton.setAttribute('aria-label', 'Save to Your Library');
+        saveTooltip.textContent = 'Save to Your Library';
+        saveStatus.textContent = 'Not saved to your library';
+        saveStatus.classList.remove('saved');
+    }
+}
+
+function undoSave() {
+    clearTimeout(undoTimer);
+    isSaved = false;
+    undoButton.hidden = true;
+    renderSaveState();
+    showToast('Removed from Your Library');
+}
+
+saveButton.addEventListener('click', () => {
+    clearTimeout(undoTimer);
+
+    if (isSaved) {
+        isSaved = false;
+        undoButton.hidden = true;
+        renderSaveState();
+        showToast('Removed from Your Library');
+    } else {
+        isSaved = true;
+        renderSaveState();
+        undoButton.hidden = false;
+        showToast('Added to Your Library');
+
+        undoTimer = setTimeout(() => {
+            undoButton.hidden = true;
+        }, 5000);
+    }
+});
+
+undoButton.addEventListener('click', undoSave);
+
+// 2. SMART SHUFFLE PREVIEW
+shuffleButton.addEventListener('click', () => {
+    if (shuffleIsOn) {
+        shuffleIsOn = false;
+        shuffleButton.classList.remove('active');
+        shuffleButton.setAttribute('aria-pressed', 'false');
+        shuffleButton.setAttribute('aria-label', 'Preview Smart Shuffle');
+        shufflePreview.hidden = true;
+        shuffleStatus.textContent = 'Shuffle is off';
+    } else {
+        shufflePreview.hidden = !shufflePreview.hidden;
+        shuffleStatus.textContent = shufflePreview.hidden
+            ? 'Shuffle is off'
+            : 'Previewing suggested songs';
+    }
+});
+
+enableShuffle.addEventListener('click', () => {
+    shuffleIsOn = true;
+    shuffleButton.classList.add('active');
+    shuffleButton.setAttribute('aria-pressed', 'true');
+    shuffleButton.setAttribute('aria-label', 'Turn Shuffle off');
+    shufflePreview.hidden = true;
+    shuffleStatus.textContent = 'Shuffle is on';
+    showToast('Smart Shuffle enabled');
+});
+
+// 3. ADD TO QUEUE WITH COUNTER
+function renderQueue() {
+    queueCounter.textContent = queuedSongs.length;
+    queueCounter.hidden = queuedSongs.length === 0;
+
+    queueStatus.textContent = queuedSongs.length === 0
+        ? 'Your queue is empty'
+        : `${queuedSongs.length} song(s) in your queue`;
+
+    queueItems.replaceChildren();
+
+    queuedSongs.forEach(song => {
+        const item = document.createElement('li');
+        item.textContent = song;
+        queueItems.appendChild(item);
+    });
+}
+
+document.querySelectorAll('.queue-button').forEach(button => {
+    button.addEventListener('click', () => {
+        const song = button.dataset.song;
+        queuedSongs.push(song);
+        renderQueue();
+        showToast(`Added "${song}" to Queue`);
+    });
+});
+
+openQueue.addEventListener('click', () => {
+    queuePanel.hidden = false;
+    renderQueue();
+});
+
+closeQueue.addEventListener('click', () => {
+    queuePanel.hidden = true;
+});
+
+// Initialize the default states
+renderSaveState();
+renderQueue();
+
+    </script>
+</body>
+</html>
