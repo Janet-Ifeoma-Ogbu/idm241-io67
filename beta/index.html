@@ -414,6 +414,7 @@ hr {
 </head>
 <body>
     
+
 <main class="section">
     <header class="page-header">
         <h1>Spotify</h1>
@@ -448,39 +449,40 @@ hr {
             Not saved to your library
         </p>
 
-        <button class="secondary-button" id="undoButton" hidden>
+        <button class="secondary-button" id="undoButton" type="button" hidden>
             Undo
         </button>
     </section>
 
     <div class="section-label">TRIGGERS</div>
     <ul>
-        <li>Hover over or focus on the Save button.</li>
-        <li>Click the plus button to save the playlist.</li>
-        <li>Click Undo within five seconds of saving.</li>
-        <li>Click the checkmark to remove the playlist.</li>
+        <li>Hover On</li>
+        <li>Hover Off</li>
+        <li>Click On</li>
+        <li>Click Off</li>
+        <li>Click Undo</li>
     </ul>
 
     <div class="section-label">RULES</div>
     <ul>
-        <li>Hovering displays a tooltip describing the available action.</li>
-        <li>Clicking the plus changes it to a green checkmark and displays an Undo option for five seconds.</li>
-        <li>Clicking Undo returns the button to its unsaved state.</li>
+        <li><strong>Hover On:</strong> The cursor changes to a hand and the tooltip appears.</li>
+        <li><strong>Hover Off:</strong> The cursor changes back to an arrow and the tooltip disappears.</li>
+        <li><strong>Click On:</strong> The plus button changes to a green checkmark, the message changes to "Added to Your Library" and an Undo button appears for five seconds.</li>
+        <li><strong>Click Off:</strong> The green checkmark changes back to a plus and the message changes to "Removed from Your Library."</li>
+        <li><strong>Click Undo:</strong> The plus button returns and the message changes to "Removed from Your Library."</li>
     </ul>
 
     <div class="section-label">FEEDBACK</div>
     <ul>
-        <li>The plus changes to a green checkmark when saved.</li>
-        <li>The message "Added to Your Library" and an Undo button appear.</li>
-        <li>Clicking Undo changes the icon back to a plus and displays "Removed from Your Library."</li>
+        <li><strong>Hover On:</strong> The cursor changes to a hand and the tooltip appears.</li>
+        <li><strong>Hover Off:</strong> The cursor changes back to an arrow and the tooltip disappears.</li>
+        <li><strong>Click On:</strong> The plus button changes to a green checkmark, the message changes to "Added to Your Library" and an Undo button appears for five seconds.</li>
+        <li><strong>Click Off:</strong> The green checkmark changes back to a plus and the message changes to "Removed from Your Library."</li>
+        <li><strong>Click Undo:</strong> The plus button returns and the message changes to "Removed from Your Library."</li>
     </ul>
 
     <div class="section-label">LOOPS &amp; MODES</div>
-    <ul>
-        <li><strong>Unsaved mode:</strong> A plus icon is displayed.</li>
-        <li><strong>Saved mode:</strong> A green checkmark is displayed.</li>
-        <li><strong>Temporary mode:</strong> The Undo option is available for five seconds after saving.</li>
-    </ul>
+    <p>No loops or modes.</p>
 
     <hr>
 
@@ -513,7 +515,7 @@ hr {
                 <li>Water — Tyla</li>
                 <li>WHERE SHE GOES — Bad Bunny</li>
             </ol>
-            <button class="primary-button" id="enableShuffle">
+            <button class="primary-button" id="enableShuffle" type="button">
                 Enable Shuffle
             </button>
         </div>
@@ -525,32 +527,33 @@ hr {
 
     <div class="section-label">TRIGGERS</div>
     <ul>
-        <li>Hover over or focus on the Shuffle button.</li>
-        <li>Click the Shuffle button to open the preview.</li>
-        <li>Click Enable Shuffle to activate Shuffle.</li>
-        <li>Click the active Shuffle button to turn it off.</li>
+        <li>Hover On</li>
+        <li>Hover Off</li>
+        <li>Click On</li>
+        <li>Click Enable</li>
+        <li>Click Off</li>
     </ul>
 
     <div class="section-label">RULES</div>
     <ul>
-        <li>Clicking Shuffle while it is off opens a panel with three proposed song recommendations.</li>
-        <li>Clicking Enable Shuffle closes the preview and turns Shuffle on.</li>
-        <li>Clicking Shuffle while it is on turns it off.</li>
+        <li><strong>Hover On:</strong> The cursor changes to a hand and the Shuffle button changes appearance.</li>
+        <li><strong>Hover Off:</strong> The cursor changes back to an arrow and the Shuffle button returns to its normal appearance.</li>
+        <li><strong>Click On:</strong> A preview panel appears with three suggested songs.</li>
+        <li><strong>Click Enable:</strong> The preview panel disappears, the Shuffle icon turns green and the message changes to "Shuffle is on."</li>
+        <li><strong>Click Off:</strong> The Shuffle icon returns to its normal color and the message changes to "Shuffle is off."</li>
     </ul>
 
     <div class="section-label">FEEDBACK</div>
     <ul>
-        <li>The preview panel displays three suggested songs.</li>
-        <li>The Shuffle icon turns green when activated.</li>
-        <li>The status text changes between "Shuffle is off" and "Shuffle is on."</li>
+        <li><strong>Hover On:</strong> The cursor changes to a hand and the Shuffle button changes appearance.</li>
+        <li><strong>Hover Off:</strong> The cursor changes back to an arrow and the Shuffle button returns to its normal appearance.</li>
+        <li><strong>Click On:</strong> A preview panel appears with three suggested songs.</li>
+        <li><strong>Click Enable:</strong> The preview panel disappears, the Shuffle icon turns green and the message changes to "Shuffle is on."</li>
+        <li><strong>Click Off:</strong> The Shuffle icon returns to its normal color and the message changes to "Shuffle is off."</li>
     </ul>
 
     <div class="section-label">LOOPS &amp; MODES</div>
-    <ul>
-        <li><strong>Off mode:</strong> Shuffle is inactive.</li>
-        <li><strong>Preview mode:</strong> Suggested songs are displayed before activation.</li>
-        <li><strong>On mode:</strong> Shuffle is active until the user turns it off.</li>
-    </ul>
+    <p>No loops or modes.</p>
 
     <hr>
 
@@ -620,200 +623,197 @@ hr {
 
     <div class="section-label">TRIGGERS</div>
     <ul>
-        <li>Hover over an Add to Queue button.</li>
-        <li>Click + Queue beside a song.</li>
-        <li>Click View Queue to display queued songs.</li>
-        <li>Click Close Queue to hide the queue panel.</li>
+        <li>Hover On</li>
+        <li>Hover Off</li>
+        <li>Click Add</li>
+        <li>Click View</li>
+        <li>Click Close</li>
     </ul>
 
     <div class="section-label">RULES</div>
     <ul>
-        <li>Clicking + Queue adds the selected sample song to the queue.</li>
-        <li>The counter increases by one for every song added.</li>
-        <li>Opening the queue displays the queued songs. Closing it hides the panel without removing songs.</li>
+        <li><strong>Hover On:</strong> The cursor changes to a hand and the button changes appearance.</li>
+        <li><strong>Hover Off:</strong> The cursor changes back to an arrow and the button returns to its normal appearance.</li>
+        <li><strong>Click Add:</strong> The song title appears in the queue confirmation message and the counter increases by one.</li>
+        <li><strong>Click View:</strong> The queue panel appears and shows the songs in the queue.</li>
+        <li><strong>Click Close:</strong> The queue panel disappears, but the songs remain in the queue.</li>
     </ul>
 
     <div class="section-label">FEEDBACK</div>
     <ul>
-        <li>A confirmation message displays the song title and says it was added to the queue.</li>
-        <li>The numbered counter updates to reflect the total queued songs.</li>
-        <li>Clicking View Queue reveals the song list. Clicking Close Queue hides it.</li>
+        <li><strong>Hover On:</strong> The cursor changes to a hand and the button changes appearance.</li>
+        <li><strong>Hover Off:</strong> The cursor changes back to an arrow and the button returns to its normal appearance.</li>
+        <li><strong>Click Add:</strong> The song title appears in the queue confirmation message and the counter increases by one.</li>
+        <li><strong>Click View:</strong> The queue panel appears and shows the songs in the queue.</li>
+        <li><strong>Click Close:</strong> The queue panel disappears, but the songs remain in the queue.</li>
     </ul>
 
     <div class="section-label">LOOPS &amp; MODES</div>
-    <ul>
-        <li><strong>Empty mode:</strong> No songs have been added.</li>
-        <li><strong>Queue mode:</strong> The counter displays the number of queued songs.</li>
-        <li><strong>Queue panel mode:</strong> The list is visible until the user closes it.</li>
-        <li>Adding more songs repeats the add-to-queue interaction and updates the counter.</li>
-    </ul>
+    <p>No loops or modes.</p>
 
     <hr>
-    <h2>Visualizations</h2>
-    <p>
-        Add your own screenshots below showing the cursor over each control,
-        the click state, and the resulting feedback. These should document
-        your proposed designs, not placeholder images.
-    </p>
+
+    <!-- <h2>Visualizations</h2>
+    <p>Add screenshots of your working prototype here, with the cursor visible.</p> -->
 </main>
+
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 
-    <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
     <script>
-       
-const saveButton = document.getElementById('saveButton');
-const saveIcon = document.getElementById('saveIcon');
-const saveTooltip = document.getElementById('saveTooltip');
-const saveStatus = document.getElementById('saveStatus');
-const undoButton = document.getElementById('undoButton');
+            
+        const saveButton = document.getElementById('saveButton');
+        const saveIcon = document.getElementById('saveIcon');
+        const saveTooltip = document.getElementById('saveTooltip');
+        const saveStatus = document.getElementById('saveStatus');
+        const undoButton = document.getElementById('undoButton');
 
-const shuffleButton = document.getElementById('shuffleButton');
-const shufflePreview = document.getElementById('shufflePreview');
-const enableShuffle = document.getElementById('enableShuffle');
-const shuffleStatus = document.getElementById('shuffleStatus');
+        const shuffleButton = document.getElementById('shuffleButton');
+        const shufflePreview = document.getElementById('shufflePreview');
+        const enableShuffle = document.getElementById('enableShuffle');
+        const shuffleStatus = document.getElementById('shuffleStatus');
 
-const queueCounter = document.getElementById('queueCounter');
-const queueStatus = document.getElementById('queueStatus');
-const queuePanel = document.getElementById('queuePanel');
-const queueItems = document.getElementById('queueItems');
-const openQueue = document.getElementById('openQueue');
-const closeQueue = document.getElementById('closeQueue');
-const toast = document.getElementById('toast');
+        const queueCounter = document.getElementById('queueCounter');
+        const queueStatus = document.getElementById('queueStatus');
+        const queuePanel = document.getElementById('queuePanel');
+        const queueItems = document.getElementById('queueItems');
+        const openQueue = document.getElementById('openQueue');
+        const closeQueue = document.getElementById('closeQueue');
+        const toast = document.getElementById('toast');
 
-let isSaved = false;
-let shuffleIsOn = false;
-let queuedSongs = [];
-let undoTimer;
-let toastTimer;
+        let isSaved = false;
+        let shuffleIsOn = false;
+        let queuedSongs = [];
+        let undoTimer;
+        let toastTimer;
 
-function showToast(message) {
-    toast.textContent = message;
-    toast.classList.add('show');
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('show');
 
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => {
-        toast.classList.remove('show');
-    }, 2400);
-}
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2400);
+        }
 
-// 1. SAVE WITH UNDO
-function renderSaveState() {
-    saveButton.setAttribute('aria-pressed', String(isSaved));
+        // 1. SAVE WITH UNDO
+        function renderSaveState() {
+            saveButton.setAttribute('aria-pressed', String(isSaved));
 
-    if (isSaved) {
-        saveIcon.innerHTML = '<path d="m5 12 4 4L19 6"></path>';
-        saveButton.setAttribute('aria-label', 'Remove from Your Library');
-        saveTooltip.textContent = 'Remove from Your Library';
-        saveStatus.textContent = 'Saved to Your Library';
-        saveStatus.classList.add('saved');
-    } else {
-        saveIcon.innerHTML = '<path d="M12 5v14M5 12h14"></path>';
-        saveButton.setAttribute('aria-label', 'Save to Your Library');
-        saveTooltip.textContent = 'Save to Your Library';
-        saveStatus.textContent = 'Not saved to your library';
-        saveStatus.classList.remove('saved');
-    }
-}
+            if (isSaved) {
+                saveIcon.innerHTML = '<path d="m5 12 4 4L19 6"></path>';
+                saveButton.setAttribute('aria-label', 'Remove from Your Library');
+                saveTooltip.textContent = 'Remove from Your Library';
+                saveStatus.textContent = 'Saved to Your Library';
+                saveStatus.classList.add('saved');
+            } else {
+                saveIcon.innerHTML = '<path d="M12 5v14M5 12h14"></path>';
+                saveButton.setAttribute('aria-label', 'Save to Your Library');
+                saveTooltip.textContent = 'Save to Your Library';
+                saveStatus.textContent = 'Not saved to your library';
+                saveStatus.classList.remove('saved');
+            }
+        }
 
-function undoSave() {
-    clearTimeout(undoTimer);
-    isSaved = false;
-    undoButton.hidden = true;
-    renderSaveState();
-    showToast('Removed from Your Library');
-}
-
-saveButton.addEventListener('click', () => {
-    clearTimeout(undoTimer);
-
-    if (isSaved) {
-        isSaved = false;
-        undoButton.hidden = true;
-        renderSaveState();
-        showToast('Removed from Your Library');
-    } else {
-        isSaved = true;
-        renderSaveState();
-        undoButton.hidden = false;
-        showToast('Added to Your Library');
-
-        undoTimer = setTimeout(() => {
+        function undoSave() {
+            clearTimeout(undoTimer);
+            isSaved = false;
             undoButton.hidden = true;
-        }, 5000);
-    }
-});
+            renderSaveState();
+            showToast('Removed from Your Library');
+        }
 
-undoButton.addEventListener('click', undoSave);
+        saveButton.addEventListener('click', () => {
+            clearTimeout(undoTimer);
 
-// 2. SMART SHUFFLE PREVIEW
-shuffleButton.addEventListener('click', () => {
-    if (shuffleIsOn) {
-        shuffleIsOn = false;
-        shuffleButton.classList.remove('active');
-        shuffleButton.setAttribute('aria-pressed', 'false');
-        shuffleButton.setAttribute('aria-label', 'Preview Smart Shuffle');
-        shufflePreview.hidden = true;
-        shuffleStatus.textContent = 'Shuffle is off';
-    } else {
-        shufflePreview.hidden = !shufflePreview.hidden;
-        shuffleStatus.textContent = shufflePreview.hidden
-            ? 'Shuffle is off'
-            : 'Previewing suggested songs';
-    }
-});
+            if (isSaved) {
+                isSaved = false;
+                undoButton.hidden = true;
+                renderSaveState();
+                showToast('Removed from Your Library');
+            } else {
+                isSaved = true;
+                renderSaveState();
+                undoButton.hidden = false;
+                showToast('Added to Your Library');
 
-enableShuffle.addEventListener('click', () => {
-    shuffleIsOn = true;
-    shuffleButton.classList.add('active');
-    shuffleButton.setAttribute('aria-pressed', 'true');
-    shuffleButton.setAttribute('aria-label', 'Turn Shuffle off');
-    shufflePreview.hidden = true;
-    shuffleStatus.textContent = 'Shuffle is on';
-    showToast('Smart Shuffle enabled');
-});
+                undoTimer = setTimeout(() => {
+                    undoButton.hidden = true;
+                }, 5000);
+            }
+        });
 
-// 3. ADD TO QUEUE WITH COUNTER
-function renderQueue() {
-    queueCounter.textContent = queuedSongs.length;
-    queueCounter.hidden = queuedSongs.length === 0;
+        undoButton.addEventListener('click', undoSave);
 
-    queueStatus.textContent = queuedSongs.length === 0
-        ? 'Your queue is empty'
-        : `${queuedSongs.length} song(s) in your queue`;
+        // 2. SMART SHUFFLE PREVIEW
+        shuffleButton.addEventListener('click', () => {
+            if (shuffleIsOn) {
+                shuffleIsOn = false;
+                shuffleButton.classList.remove('active');
+                shuffleButton.setAttribute('aria-pressed', 'false');
+                shuffleButton.setAttribute('aria-label', 'Preview Smart Shuffle');
+                shufflePreview.hidden = true;
+                shuffleStatus.textContent = 'Shuffle is off';
+            } else {
+                shufflePreview.hidden = !shufflePreview.hidden;
+                shuffleStatus.textContent = shufflePreview.hidden
+                    ? 'Shuffle is off'
+                    : 'Previewing suggested songs';
+            }
+        });
 
-    queueItems.replaceChildren();
+        enableShuffle.addEventListener('click', () => {
+            shuffleIsOn = true;
+            shuffleButton.classList.add('active');
+            shuffleButton.setAttribute('aria-pressed', 'true');
+            shuffleButton.setAttribute('aria-label', 'Turn Shuffle off');
+            shufflePreview.hidden = true;
+            shuffleStatus.textContent = 'Shuffle is on';
+            showToast('Smart Shuffle enabled');
+        });
 
-    queuedSongs.forEach(song => {
-        const item = document.createElement('li');
-        item.textContent = song;
-        queueItems.appendChild(item);
-    });
-}
+        // 3. ADD TO QUEUE WITH COUNTER
+        function renderQueue() {
+            queueCounter.textContent = queuedSongs.length;
+            queueCounter.hidden = queuedSongs.length === 0;
 
-document.querySelectorAll('.queue-button').forEach(button => {
-    button.addEventListener('click', () => {
-        const song = button.dataset.song;
-        queuedSongs.push(song);
+            queueStatus.textContent = queuedSongs.length === 0
+                ? 'Your queue is empty'
+                : `${queuedSongs.length} song(s) in your queue`;
+
+            queueItems.replaceChildren();
+
+            queuedSongs.forEach(song => {
+                const item = document.createElement('li');
+                item.textContent = song;
+                queueItems.appendChild(item);
+            });
+        }
+
+        document.querySelectorAll('.queue-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const song = button.dataset.song;
+                queuedSongs.push(song);
+                renderQueue();
+                showToast(`Added "${song}" to Queue`);
+            });
+        });
+
+        openQueue.addEventListener('click', () => {
+            queuePanel.hidden = false;
+            renderQueue();
+        });
+
+        closeQueue.addEventListener('click', () => {
+            queuePanel.hidden = true;
+        });
+
+        // Initialize the default states
+        renderSaveState();
         renderQueue();
-        showToast(`Added "${song}" to Queue`);
-    });
-});
-
-openQueue.addEventListener('click', () => {
-    queuePanel.hidden = false;
-    renderQueue();
-});
-
-closeQueue.addEventListener('click', () => {
-    queuePanel.hidden = true;
-});
-
-// Initialize the default states
-renderSaveState();
-renderQueue();
 
     </script>
 </body>
