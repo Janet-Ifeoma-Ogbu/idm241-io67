@@ -493,7 +493,7 @@ hr {
         <h2 id="shuffle-title">1. Smart Shuffle Preview</h2>
         <p class="hint">Preview three suggested songs before enabling Shuffle.</p>
 
-         <div class="button-row">
+        <!-- <div class="button-row">
             <div class="button-wrap">
                 <button class="icon-button" id="shuffleButton"
                         type="button" aria-label="Preview Smart Shuffle"
@@ -524,7 +524,7 @@ hr {
 
         <p class="status" id="shuffleStatus" aria-live="polite">
             Shuffle is off
-        </p> 
+        </p> -->
     </section>
 
     <div class="section-label">TRIGGERS</div>
@@ -618,7 +618,7 @@ hr {
         <h2 id="queue-title">2. Add to Queue with Counter</h2>
         <p class="hint">Add sample songs and see the queue counter update.</p>
 
-         <div class="queue-list">
+        <!-- <div class="queue-list">
             <div class="queue-song">
                 <span class="song-number">01</span>
                 <div class="song-info">
@@ -674,7 +674,7 @@ hr {
             <button class="secondary-button" id="closeQueue" type="button">
                 Close Queue
             </button>
-        </div> 
+        </div> -->
     </section>
 
     <div class="section-label">TRIGGERS</div>
@@ -771,159 +771,5 @@ hr {
 
 
 
-    <script>
-            
-        const saveButton = document.getElementById('saveButton');
-        const saveIcon = document.getElementById('saveIcon');
-        const saveTooltip = document.getElementById('saveTooltip');
-        const saveStatus = document.getElementById('saveStatus');
-        const undoButton = document.getElementById('undoButton');
-
-        const shuffleButton = document.getElementById('shuffleButton');
-        const shufflePreview = document.getElementById('shufflePreview');
-        const enableShuffle = document.getElementById('enableShuffle');
-        const shuffleStatus = document.getElementById('shuffleStatus');
-
-        const queueCounter = document.getElementById('queueCounter');
-        const queueStatus = document.getElementById('queueStatus');
-        const queuePanel = document.getElementById('queuePanel');
-        const queueItems = document.getElementById('queueItems');
-        const openQueue = document.getElementById('openQueue');
-        const closeQueue = document.getElementById('closeQueue');
-        const toast = document.getElementById('toast');
-
-        let isSaved = false;
-        let shuffleIsOn = false;
-        let queuedSongs = [];
-        let undoTimer;
-        let toastTimer;
-
-        function showToast(message) {
-            toast.textContent = message;
-            toast.classList.add('show');
-
-            clearTimeout(toastTimer);
-            toastTimer = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 2400);
-        }
-
-        // 1. SAVE WITH UNDO
-        function renderSaveState() {
-            saveButton.setAttribute('aria-pressed', String(isSaved));
-
-            if (isSaved) {
-                saveIcon.innerHTML = '<path d="m5 12 4 4L19 6"></path>';
-                saveButton.setAttribute('aria-label', 'Remove from Your Library');
-                saveTooltip.textContent = 'Remove from Your Library';
-                saveStatus.textContent = 'Saved to Your Library';
-                saveStatus.classList.add('saved');
-            } else {
-                saveIcon.innerHTML = '<path d="M12 5v14M5 12h14"></path>';
-                saveButton.setAttribute('aria-label', 'Save to Your Library');
-                saveTooltip.textContent = 'Save to Your Library';
-                saveStatus.textContent = 'Not saved to your library';
-                saveStatus.classList.remove('saved');
-            }
-        }
-
-        function undoSave() {
-            clearTimeout(undoTimer);
-            isSaved = false;
-            undoButton.hidden = true;
-            renderSaveState();
-            showToast('Removed from Your Library');
-        }
-
-        saveButton.addEventListener('click', () => {
-            clearTimeout(undoTimer);
-
-            if (isSaved) {
-                isSaved = false;
-                undoButton.hidden = true;
-                renderSaveState();
-                showToast('Removed from Your Library');
-            } else {
-                isSaved = true;
-                renderSaveState();
-                undoButton.hidden = false;
-                showToast('Added to Your Library');
-
-                undoTimer = setTimeout(() => {
-                    undoButton.hidden = true;
-                }, 5000);
-            }
-        });
-
-        undoButton.addEventListener('click', undoSave);
-
-        // 2. SMART SHUFFLE PREVIEW
-        shuffleButton.addEventListener('click', () => {
-            if (shuffleIsOn) {
-                shuffleIsOn = false;
-                shuffleButton.classList.remove('active');
-                shuffleButton.setAttribute('aria-pressed', 'false');
-                shuffleButton.setAttribute('aria-label', 'Preview Smart Shuffle');
-                shufflePreview.hidden = true;
-                shuffleStatus.textContent = 'Shuffle is off';
-            } else {
-                shufflePreview.hidden = !shufflePreview.hidden;
-                shuffleStatus.textContent = shufflePreview.hidden
-                    ? 'Shuffle is off'
-                    : 'Previewing suggested songs';
-            }
-        });
-
-        enableShuffle.addEventListener('click', () => {
-            shuffleIsOn = true;
-            shuffleButton.classList.add('active');
-            shuffleButton.setAttribute('aria-pressed', 'true');
-            shuffleButton.setAttribute('aria-label', 'Turn Shuffle off');
-            shufflePreview.hidden = true;
-            shuffleStatus.textContent = 'Shuffle is on';
-            showToast('Smart Shuffle enabled');
-        });
-
-        // 3. ADD TO QUEUE WITH COUNTER
-        function renderQueue() {
-            queueCounter.textContent = queuedSongs.length;
-            queueCounter.hidden = queuedSongs.length === 0;
-
-            queueStatus.textContent = queuedSongs.length === 0
-                ? 'Your queue is empty'
-                : `${queuedSongs.length} song(s) in your queue`;
-
-            queueItems.replaceChildren();
-
-            queuedSongs.forEach(song => {
-                const item = document.createElement('li');
-                item.textContent = song;
-                queueItems.appendChild(item);
-            });
-        }
-
-        document.querySelectorAll('.queue-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const song = button.dataset.song;
-                queuedSongs.push(song);
-                renderQueue();
-                showToast(`Added "${song}" to Queue`);
-            });
-        });
-
-        openQueue.addEventListener('click', () => {
-            queuePanel.hidden = false;
-            renderQueue();
-        });
-
-        closeQueue.addEventListener('click', () => {
-            queuePanel.hidden = true;
-        });
-
-        // Initialize the default states
-        renderSaveState();
-        renderQueue();
-
-    </script>
 </body>
 </html>
