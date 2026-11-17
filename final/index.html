@@ -1,0 +1,1484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+    <title>Spotify Microinteractions</title>
+       <style>
+        :root {
+            --spotify-green: #1ed760;
+            --page-bg: #121212;
+            --panel-bg: #181818;
+            --raised-bg: #282828;
+            --text-primary: #ffffff;
+            --text-secondary: #b3b3b3;
+            --border: #333333;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 24px 16px;
+            background: #121212;
+            color: #b3b3b3;
+            font-family: 'Inter', Arial, sans-serif;
+            line-height: 1.65;
+        }
+
+        .section {
+            max-width: 950px;
+            margin: auto;
+            padding: clamp(20px, 4vw, 40px);
+            background: #181818;
+            border-radius: 12px;
+        }
+
+        .page-header {
+            text-align: center;
+        }
+
+        h1 {
+            color: #1ed760;
+            font-size: clamp(36px, 6vw, 48px);
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            margin: 0;
+        }
+
+        .subtitle {
+            margin: 4px 0 10px;
+        }
+
+        a {
+            color: #1ed760;
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+
+        h2 {
+            color: white;
+            font-size: 22px;
+            margin: 0 0 8px;
+        }
+
+        h3 {
+            color: white;
+            font-size: 16px;
+        }
+
+        p {
+            margin: 8px 0 14px;
+        }
+
+        .demo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            margin: 28px auto;
+            padding: 24px;
+            text-align: center;
+            background: #202020;
+            border: 1px solid #303030;
+            border-radius: 12px;
+        }
+
+        .hint {
+            color: #a7a7a7;
+            font-size: 13px;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .button-wrap {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .icon-button {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 54px;
+            height: 54px;
+            border: 0;
+            border-radius: 50%;
+            background: #333;
+            color: #b3b3b3;
+            cursor: pointer;
+            transition: color .18s ease, background .18s ease, transform .18s ease;
+        }
+
+        .icon-button:hover,
+        .icon-button:focus-visible {
+            color: white;
+            background: #444;
+            transform: scale(1.05);
+        }
+
+        .icon-button.active {
+            color: #1ed760;
+        }
+
+        .icon-button svg,
+        .queue-toggle svg {
+            width: 25px;
+            height: 25px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .tooltip {
+            position: absolute;
+            z-index: 5;
+            bottom: calc(100% + 10px);
+            left: 50%;
+            width: max-content;
+            max-width: 230px;
+            padding: 7px 10px;
+            border-radius: 4px;
+            background: #f5f5f5;
+            color: #181818;
+            font-size: 12px;
+            font-weight: 700;
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, 4px);
+            transition: opacity .15s ease, transform .15s ease;
+            pointer-events: none;
+        }
+
+        .button-wrap:hover .tooltip,
+        .button-wrap:focus-within .tooltip {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0);
+        }
+
+        .status {
+            min-height: 24px;
+            margin: 0;
+            color: #b3b3b3;
+            font-size: 14px;
+        }
+
+        .status.saved {
+            color: #1ed760;
+        }
+
+        .primary-button,
+        .secondary-button {
+            border: 0;
+            border-radius: 24px;
+            padding: 10px 18px;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform .15s ease, background .15s ease;
+        }
+
+        .primary-button {
+            color: #000;
+            background: #1ed760;
+        }
+
+        .primary-button:hover {
+            background: #3be477;
+            transform: scale(1.03);
+        }
+
+        .secondary-button {
+            color: white;
+            background: #333;
+        }
+
+        .secondary-button:hover {
+            background: #444;
+        }
+
+        [hidden] {
+            display: none !important;
+        }
+
+        .preview-panel,
+        .queue-panel {
+            width: min(100%, 440px);
+            padding: 16px;
+            border: 1px solid #383838;
+            border-radius: 8px;
+            background: #282828;
+            text-align: left;
+        }
+
+        .preview-panel ol,
+        .queue-panel ol {
+            padding-left: 24px;
+        }
+
+        .preview-panel li,
+        .queue-panel li {
+            padding: 5px 0;
+        }
+
+        .section-label {
+            margin-top: 24px;
+            padding: 10px 14px;
+            border-left: 4px solid #1ed760;
+            border-radius: 4px;
+            background: #282828;
+            color: white;
+            font-size: 13px;
+            font-weight: 800;
+            letter-spacing: 1.3px;
+        }
+
+        ul {
+            padding-left: 24px;
+        }
+
+        li {
+            padding: 3px 0;
+        }
+
+        li::marker {
+            color: #1ed760;
+        }
+
+        strong {
+            color: white;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid #333;
+            margin: 32px 0;
+        }
+
+        .queue-list {
+            width: min(100%, 520px);
+        }
+
+        .queue-song {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 4px;
+            border-bottom: 1px solid #333;
+            text-align: left;
+        }
+
+        .song-number {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .song-info {
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        .song-info strong {
+            font-size: 14px;
+        }
+
+        .song-info span {
+            color: #a7a7a7;
+            font-size: 12px;
+        }
+
+        .queue-button {
+            border: 1px solid #777;
+            border-radius: 20px;
+            padding: 6px 12px;
+            background: transparent;
+            color: white;
+            font: inherit;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .queue-button:hover {
+            border-color: #1ed760;
+            color: #1ed760;
+        }
+
+        .queue-toggle {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border: 0;
+            border-radius: 6px;
+            background: #333;
+            color: white;
+            font: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .queue-toggle:hover {
+            background: #444;
+        }
+
+        .queue-counter {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 22px;
+            height: 22px;
+            padding: 0 5px;
+            border-radius: 11px;
+            background: #1ed760;
+            color: #000;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .toast {
+            position: fixed;
+            z-index: 20;
+            bottom: 24px;
+            left: 24px;
+            max-width: calc(100vw - 48px);
+            padding: 12px 16px;
+            border-radius: 6px;
+            background: #f5f5f5;
+            color: #181818;
+            font-size: 14px;
+            font-weight: 700;
+            box-shadow: 0 8px 30px #0008;
+            opacity: 0;
+            transform: translateY(10px);
+            pointer-events: none;
+            transition: opacity .18s ease, transform .18s ease;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Additional styles for the three microinteractions */
+
+        /* Volume slider */
+        .volume-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            width: min(100%, 420px);
+            padding: 22px;
+            border-radius: 10px;
+            background: #282828;
+        }
+
+        .speaker-icon {
+            width: 42px;
+            height: 42px;
+            color: white;
+        }
+
+        .speaker-icon svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .speaker-wave {
+            opacity: 0;
+            transition: opacity .15s ease;
+        }
+
+        .speaker-wave.visible {
+            opacity: 1;
+        }
+
+        .mute-x {
+            opacity: 0;
+            stroke: #1ed760;
+        }
+
+        .mute-x.visible {
+            opacity: 1;
+        }
+
+        .volume-range {
+            width: 100%;
+            accent-color: #1ed760;
+            cursor: pointer;
+        }
+
+        .volume-value {
+            min-width: 42px;
+            color: white;
+            font-size: 13px;
+            text-align: right;
+        }
+
+        /* Song row actions */
+        .song-list {
+            width: min(100%, 600px);
+            text-align: left;
+        }
+
+        .song-list .queue-song {
+            gap: 12px;
+        }
+
+        .song-art {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border-radius: 4px;
+            background: #383838;
+            color: #1ed760;
+            font-size: 18px;
+        }
+
+        .song-action {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+            background: transparent;
+        }
+
+        .song-action svg {
+            width: 21px;
+            height: 21px;
+        }
+
+        .song-action.liked {
+            color: #1ed760;
+        }
+
+        .playlist-menu {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            width: 100%;
+            margin-top: 10px;
+            padding: 12px;
+            border-radius: 8px;
+            background: #383838;
+        }
+
+        .playlist-menu button {
+            padding: 9px 12px;
+            border: 0;
+            border-radius: 5px;
+            background: transparent;
+            color: white;
+            font: inherit;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .playlist-menu button:hover {
+            background: #505050;
+        }
+
+        /* Expanded queue */
+        .queue-panel.expanded {
+            position: fixed;
+            z-index: 100;
+            inset: 5vh 6vw;
+            width: 88vw;
+            max-width: none;
+            height: 90vh;
+            overflow-y: auto;
+            padding: 28px;
+            background: #181818;
+            box-shadow: 0 0 0 100vmax #000b;
+        }
+
+        .queue-panel.expanded .queue-song {
+            padding: 16px 8px;
+        }
+
+        .queue-panel.expanded .song-info strong {
+            font-size: 16px;
+        }
+
+        .queue-panel.expanded .song-info span {
+            font-size: 13px;
+        }
+
+        .queue-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .queue-heading h3 {
+            margin: 0;
+            font-size: 20px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .section {
+                padding: 18px 14px;
+            }
+
+            .demo {
+                padding: 18px 12px;
+            }
+
+            .queue-song {
+                gap: 8px;
+            }
+
+            .queue-button {
+                padding: 6px 8px;
+            }
+
+            .queue-panel.expanded {
+                inset: 2vh 3vw;
+                width: 94vw;
+                height: 96vh;
+                padding: 18px;
+            }
+
+            .volume-control {
+                gap: 12px;
+                padding: 16px;
+            }
+
+            .song-art {
+                width: 34px;
+                height: 34px;
+            }
+
+            .song-action {
+                width: 32px;
+                height: 32px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: .01ms !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<main class="section">
+
+<header class="page-header">
+    <h1>Spotify</h1>
+    <p class="subtitle">
+        Final Microinteraction Prototypes ·
+        <a href="https://open.spotify.com"
+           target="_blank"
+           rel="noopener noreferrer">
+            Open Spotify
+        </a>
+    </p>
+    <p>Proposed design improvements for Spotify's Web Player.</p>
+</header>
+
+<hr>
+
+<section class="demo" aria-labelledby="volume-title">
+
+    <h2 id="volume-title">1. Volume Slider with Visual Sound Indicator</h2>
+
+    <p class="hint">
+        Adjust the volume and watch the speaker icon respond to changes.
+    </p>
+
+    <!-- <div class="volume-demo">
+
+        <div class="speaker level-high" id="speakerIcon"
+             aria-label="Volume high">
+
+            <svg viewBox="0 0 32 32" aria-hidden="true">
+
+                <path d="M3 12h6l8-7v22l-8-7H3z"/>
+
+                <path class="sound-wave wave-one"
+                      d="M21 12a6 6 0 0 1 0 8"/>
+
+                <path class="sound-wave wave-two"
+                      d="M24 8a12 12 0 0 1 0 16"/>
+
+                <path class="sound-wave wave-three"
+                      d="M27 4a17 17 0 0 1 0 24"/>
+
+                <path class="sound-wave mute-x"
+                      d="M21 12l7 8m0-8l-7 8"
+                      style="opacity:0"/>
+
+            </svg>
+
+        </div>
+
+        <div class="volume-control">
+
+            <div class="volume-top">
+                <span>Volume</span>
+                <span id="volumeValue">100%</span>
+            </div>
+
+            <input
+                type="range"
+                id="volumeSlider"
+                min="0"
+                max="100"
+                value="100"
+                aria-label="Adjust volume"
+            >
+
+            <p class="volume-status" id="volumeStatus"
+               aria-live="polite">
+                Volume is high
+            </p>
+
+        </div>
+
+    </div> -->
+
+</section>
+
+<div class="section-label">TRIGGERS</div>
+<ul>
+    <li>Hover On</li>
+    <li>Hover Off</li>
+    <li>Drag Right</li>
+    <li>Drag Left</li>
+    <li>Drag to Zero</li>
+    <li>Release</li>
+</ul>
+
+<div class="section-label">RULES</div>
+<ul>
+    <li><strong>Hover On:</strong>
+        <ul>
+            <li>The cursor changes to a hand.</li>
+            <li>The volume slider becomes highlighted.</li>
+        </ul>
+    </li>
+    <li><strong>Hover Off:</strong>
+        <ul>
+            <li>The slider returns to its normal appearance.</li>
+        </ul>
+    </li>
+    <li><strong>Drag Right:</strong>
+        <ul>
+            <li>The volume increases.</li>
+            <li>Additional sound waves appear.</li>
+        </ul>
+    </li>
+    <li><strong>Drag Left:</strong>
+        <ul>
+            <li>The volume decreases.</li>
+            <li>Sound waves gradually disappear.</li>
+        </ul>
+    </li>
+    <li><strong>Drag to Zero:</strong>
+        <ul>
+            <li>All sound waves disappear.</li>
+            <li>An X appears beside the speaker icon.</li>
+        </ul>
+    </li>
+    <li><strong>Release:</strong>
+        <ul>
+            <li>The volume stays at the selected level.</li>
+        </ul>
+    </li>
+</ul>
+
+<div class="section-label">FEEDBACK</div>
+<ul>
+    <li>The slider fill changes with movement.</li>
+    <li>Sound waves appear or disappear according to the volume level.</li>
+    <li>An X appears when the volume reaches zero.</li>
+    <li>The percentage updates as the slider moves.</li>
+</ul>
+
+<div class="section-label">LOOPS &amp; MODES</div>
+<p>No loops or modes.</p>
+
+<h2>Visualizations</h2>
+<video src="../videos/volume.mp4"  width="400px" controls></video>
+
+<hr>
+
+
+<section class="demo" aria-labelledby="like-title">
+
+    <h2 id="like-title">2. Like Song + Add to Playlist</h2>
+
+    <p class="hint">
+        Use the heart to like a song or the plus icon to add it
+        to another playlist.
+    </p>
+
+    <!-- <div class="song-list">
+
+       
+
+        <div class="song-row">
+
+            <span class="song-number">1</span>
+
+            <div class="album-art">♫</div>
+
+            <div class="song-info">
+                <h3>Calm Down</h3>
+                <p>Rema, Selena Gomez</p>
+            </div>
+
+            <div class="song-actions">
+
+                <button class="icon-button like-button"
+                        type="button"
+                        aria-label="Add Calm Down to Liked Songs"
+                        aria-pressed="false"
+                        title="Add to Liked Songs">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/>
+                    </svg>
+
+                </button>
+
+                <div class="playlist-wrap">
+
+                    <button class="icon-button plus-button"
+                            type="button"
+                            aria-label="Add Calm Down to a playlist"
+                            aria-expanded="false"
+                            title="Add to Playlist">
+
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 8v8M8 12h8"/>
+                        </svg>
+
+                    </button>
+
+                    <div class="playlist-menu" hidden>
+
+                        <h4>Add to playlist</h4>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Afrobeats Mix
+                        </button>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Favorites
+                        </button>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Study Music
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        
+
+        <div class="song-row">
+
+            <span class="song-number">2</span>
+
+            <div class="album-art pink">♫</div>
+
+            <div class="song-info">
+                <h3>Water</h3>
+                <p>Tyla</p>
+            </div>
+
+            <div class="song-actions">
+
+                <button class="icon-button like-button"
+                        type="button"
+                        aria-label="Add Water to Liked Songs"
+                        aria-pressed="false"
+                        title="Add to Liked Songs">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/>
+                    </svg>
+
+                </button>
+
+                <div class="playlist-wrap">
+
+                    <button class="icon-button plus-button"
+                            type="button"
+                            aria-label="Add Water to a playlist"
+                            aria-expanded="false"
+                            title="Add to Playlist">
+
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 8v8M8 12h8"/>
+                        </svg>
+
+                    </button>
+
+                    <div class="playlist-menu" hidden>
+
+                        <h4>Add to playlist</h4>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Afrobeats Mix
+                        </button>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Favorites
+                        </button>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Study Music
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+       
+
+        <div class="song-row">
+
+            <span class="song-number">3</span>
+
+            <div class="album-art blue">♫</div>
+
+            <div class="song-info">
+                <h3>WHERE SHE GOES</h3>
+                <p>Bad Bunny</p>
+            </div>
+
+            <div class="song-actions">
+
+                <button class="icon-button like-button"
+                        type="button"
+                        aria-label="Add WHERE SHE GOES to Liked Songs"
+                        aria-pressed="false"
+                        title="Add to Liked Songs">
+
+                    <svg viewBox="0 0 24 24">
+                        <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8l1.1 1.1L12 21l7.8-7.5 1.1-1.1a5.5 5.5 0 0 0-.1-7.8z"/>
+                    </svg>
+
+                </button>
+
+                <div class="playlist-wrap">
+
+                    <button class="icon-button plus-button"
+                            type="button"
+                            aria-label="Add WHERE SHE GOES to a playlist"
+                            aria-expanded="false"
+                            title="Add to Playlist">
+
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"/>
+                            <path d="M12 8v8M8 12h8"/>
+                        </svg>
+
+                    </button>
+
+                    <div class="playlist-menu" hidden>
+
+                        <h4>Add to playlist</h4>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Afrobeats Mix
+                        </button>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Favorites
+                        </button>
+
+                        <button class="playlist-option"
+                                type="button">
+                            Study Music
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div> -->
+
+    <div class="toast" id="songToast"
+         role="status" aria-live="polite"></div>
+
+</section>
+
+<div class="section-label">TRIGGERS</div>
+<ul>
+    <li>Hover On Heart</li>
+    <li>Hover Off Heart</li>
+    <li>Click Heart</li>
+    <li>Hover On Plus</li>
+    <li>Hover Off Plus</li>
+    <li>Click Plus</li>
+    <li>Click Playlist</li>
+</ul>
+
+<div class="section-label">RULES</div>
+<ul>
+    <li><strong>Hover On Heart:</strong>
+        <ul>
+            <li>The cursor changes to a hand.</li>
+            <li>The heart icon becomes highlighted.</li>
+        </ul>
+    </li>
+    <li><strong>Hover Off Heart:</strong>
+        <ul>
+            <li>The heart returns to its normal appearance.</li>
+        </ul>
+    </li>
+    <li><strong>Click Heart:</strong>
+        <ul>
+            <li>The heart fills with green.</li>
+            <li>The song is added to Liked Songs.</li>
+        </ul>
+    </li>
+    <li><strong>Hover On Plus:</strong>
+        <ul>
+            <li>The cursor changes to a hand.</li>
+            <li>The plus icon becomes highlighted.</li>
+        </ul>
+    </li>
+    <li><strong>Hover Off Plus:</strong>
+        <ul>
+            <li>The plus icon returns to its normal appearance.</li>
+        </ul>
+    </li>
+    <li><strong>Click Plus:</strong>
+        <ul>
+            <li>A playlist selection menu appears.</li>
+        </ul>
+    </li>
+    <li><strong>Click Playlist:</strong>
+        <ul>
+            <li>The song is added to the selected playlist.</li>
+            <li>The menu closes.</li>
+        </ul>
+    </li>
+</ul>
+
+<div class="section-label">FEEDBACK</div>
+<ul>
+    <li>The heart fills with green when a song is liked.</li>
+    <li>A confirmation message displays "Added to Liked Songs."</li>
+    <li>The playlist menu appears when the plus icon is clicked.</li>
+    <li>A confirmation message displays "Added to [Playlist Name]."</li>
+</ul>
+
+<div class="section-label">LOOPS &amp; MODES</div>
+<p>No loops or modes.</p>
+
+<h2>Visualizations</h2>
+<video src="../videos/like.mp4"  width="400px" controls></video>
+
+<hr>
+
+
+<section class="demo" aria-labelledby="queue-title">
+
+    <h2 id="queue-title">3. Expandable Queue</h2>
+
+    <p class="hint">
+        Expand the Queue to see more upcoming songs and collapse it
+        to return to the original view.
+    </p>
+
+    <!-- <div class="queue-area">
+
+        <div class="queue-panel" id="queuePanel">
+
+            <div class="queue-header">
+
+                <h3>Your Queue</h3>
+
+                <button class="expand-button"
+                        id="expandQueue"
+                        type="button"
+                        aria-label="Expand queue"
+                        aria-expanded="false"
+                        title="Expand Queue">
+
+                    <svg viewBox="0 0 24 24"
+                         id="expandIcon"
+                         aria-hidden="true">
+                        <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/>
+                        <path d="M3 3l6 6M21 3l-6 6M3 21l6-6M21 21l-6-6"/>
+                    </svg>
+
+                </button>
+
+            </div>
+
+            <p class="queue-subtitle">Now Playing</p>
+
+            <div class="queue-track active">
+                <div class="album-art">♫</div>
+                <div class="song-info">
+                    <h3 class="queue-song">Calm Down</h3>
+                    <p>Rema, Selena Gomez</p>
+                </div>
+            </div>
+
+            <p class="queue-subtitle">Next Up</p>
+
+            <div class="queue-list">
+
+                <div class="queue-track">
+                    <span class="song-number">1</span>
+                    <div class="album-art pink">♫</div>
+                    <div class="song-info">
+                        <h3 class="queue-song">Water</h3>
+                        <p>Tyla</p>
+                    </div>
+                </div>
+
+                <div class="queue-track">
+                    <span class="song-number">2</span>
+                    <div class="album-art blue">♫</div>
+                    <div class="song-info">
+                        <h3 class="queue-song">WHERE SHE GOES</h3>
+                        <p>Bad Bunny</p>
+                    </div>
+                </div>
+
+                <div class="queue-track">
+                    <span class="song-number">3</span>
+                    <div class="album-art">♫</div>
+                    <div class="song-info">
+                        <h3 class="queue-song">Essence</h3>
+                        <p>Wizkid ft. Tems</p>
+                    </div>
+                </div>
+
+                <div class="queue-track">
+                    <span class="song-number">4</span>
+                    <div class="album-art pink">♫</div>
+                    <div class="song-info">
+                        <h3 class="queue-song">Last Last</h3>
+                        <p>Burna Boy</p>
+                    </div>
+                </div>
+
+                <div class="queue-track">
+                    <span class="song-number">5</span>
+                    <div class="album-art blue">♫</div>
+                    <div class="song-info">
+                        <h3 class="queue-song">Unavailable</h3>
+                        <p>Davido ft. Musa Keys</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <p class="queue-status" id="queueStatus"
+               aria-live="polite">
+                Queue is in compact view.
+            </p>
+
+        </div>
+
+    </div> -->
+
+</section>
+
+<div class="section-label">TRIGGERS</div>
+<ul>
+    <li>Hover On Expand</li>
+    <li>Hover Off Expand</li>
+    <li>Click Expand</li>
+    <li>Hover On Collapse</li>
+    <li>Click Collapse</li>
+    <li>Click Song</li>
+</ul>
+
+<div class="section-label">RULES</div>
+<ul>
+    <li><strong>Hover On Expand:</strong>
+        <ul>
+            <li>The cursor changes to a hand.</li>
+            <li>The expand icon becomes highlighted.</li>
+        </ul>
+    </li>
+    <li><strong>Hover Off Expand:</strong>
+        <ul>
+            <li>The icon returns to its normal appearance.</li>
+        </ul>
+    </li>
+    <li><strong>Click Expand:</strong>
+        <ul>
+            <li>The Queue expands into a larger view.</li>
+            <li>The song list becomes wider.</li>
+            <li>More upcoming songs become visible.</li>
+        </ul>
+    </li>
+    <li><strong>Hover On Collapse:</strong>
+        <ul>
+            <li>The cursor changes to a hand.</li>
+            <li>The collapse icon becomes highlighted.</li>
+        </ul>
+    </li>
+    <li><strong>Click Collapse:</strong>
+        <ul>
+            <li>The Queue returns to its compact view.</li>
+        </ul>
+    </li>
+    <li><strong>Click Song:</strong>
+        <ul>
+            <li>The selected song becomes highlighted as playing.</li>
+        </ul>
+    </li>
+</ul>
+
+<div class="section-label">FEEDBACK</div>
+<ul>
+    <li>The Queue expands with a smooth transition.</li>
+    <li>More song titles and artists become visible.</li>
+    <li>The expand icon changes to a collapse icon.</li>
+    <li>The Queue returns to its original size when collapsed.</li>
+    <li>The current playing song remains identifiable.</li>
+</ul>
+
+<div class="section-label">LOOPS &amp; MODES</div>
+<p>No loops or modes.</p>
+
+<h2>Visualizations</h2>
+<video src="../videos/expand.mp4"  width="400px" controls></video>
+
+</main>
+
+<script>
+
+/* ===================================
+   MICROINTERACTION 1: VOLUME SLIDER
+=================================== */
+
+const volumeSlider = document.getElementById("volumeSlider");
+const volumeValue = document.getElementById("volumeValue");
+const volumeStatus = document.getElementById("volumeStatus");
+const speakerIcon = document.getElementById("speakerIcon");
+const muteX = speakerIcon.querySelector(".mute-x");
+
+function updateVolume() {
+
+    const value = Number(volumeSlider.value);
+
+    volumeValue.textContent = value + "%";
+
+    speakerIcon.classList.remove(
+        "level-low",
+        "level-medium",
+        "level-high",
+        "muted"
+    );
+
+    if (value === 0) {
+
+        speakerIcon.classList.add("muted");
+        muteX.style.opacity = "1";
+        volumeStatus.textContent = "Volume is muted";
+
+    } else if (value <= 33) {
+
+        speakerIcon.classList.add("level-low");
+        muteX.style.opacity = "0";
+        volumeStatus.textContent = "Volume is low";
+
+    } else if (value <= 66) {
+
+        speakerIcon.classList.add("level-medium");
+        muteX.style.opacity = "0";
+        volumeStatus.textContent = "Volume is medium";
+
+    } else {
+
+        speakerIcon.classList.add("level-high");
+        muteX.style.opacity = "0";
+        volumeStatus.textContent = "Volume is high";
+
+    }
+
+}
+
+volumeSlider.addEventListener("input", updateVolume);
+volumeSlider.addEventListener("change", updateVolume);
+
+updateVolume();
+
+
+/* =========================================
+   MICROINTERACTION 2: LIKE + PLAYLIST
+========================================= */
+
+const songToast = document.getElementById("songToast");
+let toastTimeout;
+
+function showSongToast(message) {
+
+    songToast.textContent = message;
+    songToast.classList.add("show");
+
+    clearTimeout(toastTimeout);
+
+    toastTimeout = setTimeout(() => {
+        songToast.classList.remove("show");
+    }, 2500);
+
+}
+
+// Like and unlike songs
+
+document.querySelectorAll(".like-button").forEach(button => {
+
+    button.addEventListener("click", () => {
+
+        const songRow = button.closest(".song-row");
+        const songName = songRow.querySelector(".song-info h3").textContent;
+
+        const isLiked = button.classList.toggle("liked");
+
+        button.setAttribute("aria-pressed", isLiked);
+        button.setAttribute(
+            "aria-label",
+            isLiked
+                ? "Remove " + songName + " from Liked Songs"
+                : "Add " + songName + " to Liked Songs"
+        );
+
+        button.title = isLiked
+            ? "Remove from Liked Songs"
+            : "Add to Liked Songs";
+
+        showSongToast(
+            isLiked
+                ? "Added to Liked Songs."
+                : "Removed from Liked Songs."
+        );
+
+    });
+
+});
+
+// Open and close playlist menus
+
+document.querySelectorAll(".plus-button").forEach(button => {
+
+    button.addEventListener("click", (event) => {
+
+        event.stopPropagation();
+
+        const menu = button.nextElementSibling;
+        const wasOpen = !menu.hidden;
+
+        // Close all other menus
+
+        document.querySelectorAll(".playlist-menu").forEach(otherMenu => {
+            otherMenu.hidden = true;
+        });
+
+        document.querySelectorAll(".plus-button").forEach(otherButton => {
+            otherButton.setAttribute("aria-expanded", "false");
+        });
+
+        // Toggle selected menu
+
+        if (!wasOpen) {
+            menu.hidden = false;
+            button.setAttribute("aria-expanded", "true");
+        }
+
+    });
+
+});
+
+// Select playlist
+
+document.querySelectorAll(".playlist-option").forEach(option => {
+
+    option.addEventListener("click", (event) => {
+
+        const menu = option.closest(".playlist-menu");
+        const songRow = option.closest(".song-row");
+        const songName = songRow.querySelector(".song-info h3").textContent;
+        const playlistName = option.textContent;
+
+        showSongToast(
+            songName + " added to " + playlistName + "."
+        );
+
+        menu.hidden = true;
+
+        const plusButton = menu.previousElementSibling;
+        plusButton.setAttribute("aria-expanded", "false");
+
+    });
+
+});
+
+// Close menus when clicking outside
+
+document.addEventListener("click", event => {
+
+    if (!event.target.closest(".playlist-wrap")) {
+
+        document.querySelectorAll(".playlist-menu").forEach(menu => {
+            menu.hidden = true;
+        });
+
+        document.querySelectorAll(".plus-button").forEach(button => {
+            button.setAttribute("aria-expanded", "false");
+        });
+
+    }
+
+});
+
+
+/* ===================================
+   MICROINTERACTION 3: EXPAND QUEUE
+=================================== */
+
+const queuePanel = document.getElementById("queuePanel");
+const expandQueue = document.getElementById("expandQueue");
+const expandIcon = document.getElementById("expandIcon");
+const queueStatus = document.getElementById("queueStatus");
+
+function toggleQueue() {
+
+    const isExpanded = queuePanel.classList.toggle("expanded");
+
+    expandQueue.setAttribute("aria-expanded", isExpanded);
+
+    if (isExpanded) {
+
+        expandQueue.setAttribute("aria-label", "Collapse queue");
+        expandQueue.title = "Collapse Queue";
+
+        expandIcon.innerHTML = `
+            <path d="M9 3H3v6M15 3h6v6M3 15v6h6M21 15v6h-6"/>
+            <path d="M3 3l7 7M21 3l-7 7M3 21l7-7M21 21l-7-7"/>
+        `;
+
+        queueStatus.textContent = "Queue is expanded.";
+
+    } else {
+
+        expandQueue.setAttribute("aria-label", "Expand queue");
+        expandQueue.title = "Expand Queue";
+
+        expandIcon.innerHTML = `
+            <path d="M8 3H3v5M16 3h5v5M3 16v5h5M21 16v5h-5"/>
+            <path d="M3 3l6 6M21 3l-6 6M3 21l6-6M21 21l-6-6"/>
+        `;
+
+        queueStatus.textContent = "Queue is in compact view.";
+
+    }
+
+}
+
+expandQueue.addEventListener("click", toggleQueue);
+
+// Click a queued song to preview it as the playing song
+
+document.querySelectorAll(".queue-track:not(.active)").forEach(track => {
+
+    track.addEventListener("click", () => {
+
+        document.querySelectorAll(".queue-track").forEach(item => {
+            item.classList.remove("active");
+        });
+
+        track.classList.add("active");
+
+        const songName = track.querySelector(".queue-song").textContent;
+
+        queueStatus.textContent = "Now playing: " + songName;
+
+    });
+
+});
+
+// Close expanded queue with Escape key
+
+document.addEventListener("keydown", event => {
+
+    if (event.key === "Escape" &&
+        queuePanel.classList.contains("expanded")) {
+
+        toggleQueue();
+
+    }
+
+});
+
+</script>
+</head>
+<body>
+    
+</body>
+</html>
